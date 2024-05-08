@@ -19,19 +19,19 @@ To get started with the Robot Fleet Management System, follow these steps:
      
    
    ```bash
-   
    sudo apt-get install -y --no-install-recommends \
-   ros-${ROS_DISTRO}-navigation2 \
-   ros-${ROS_DISTRO}-nav2-bringup \
-   ros-${ROS_DISTRO}-turtlebot3-gazebo \
-   ros-${ROS_DISTRO}-rosbridge-*
+        ros-${ROS_DISTRO}-navigation2 \
+        ros-${ROS_DISTRO}-nav2-bringup \
+        ros-${ROS_DISTRO}-turtlebot3-gazebo \
+        ros-${ROS_DISTRO}-rosbridge-*
    
    source /opt/ros/${ROS_DISTRO}/setup.bash
    export TURTLEBOT3_MODEL=waffle
    export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/opt/ros/${ROS_DISTRO}/share/turtlebot3_gazebo/models
    git clone https://github.com/debanik123/robot_fleet_management.git
    
-   run --> 
+   run -->
+   
    ros2 run rosbridge_server rosbridge_websocket
    ros2 launch nav2_bringup tb3_simulation_launch.py slam:=True
    cd ~/robot_fleet_management/rviz_web
