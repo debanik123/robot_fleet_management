@@ -79,6 +79,17 @@ var goalPosePublisher = new ROSLIB.Topic({
     messageType: 'geometry_msgs/PoseStamped'
 });
 
+var scanSubscriber = new ROSLIB.Topic({
+  ros: ros,
+  name: '/scan',
+  messageType: 'sensor_msgs/msg/LaserScan'
+});
+
+
+scanSubscriber.subscribe(function(scan) {
+  console.log('Received scan data:', scan);
+});
+
 robot_poseSubscriber.subscribe(function(message) {
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
   robot_pose = message.pose;
