@@ -86,8 +86,18 @@ var scanSubscriber = new ROSLIB.Topic({
 });
 
 
-scanSubscriber.subscribe(function(scan) {
-  console.log('Received scan data:', scan);
+scanSubscriber.subscribe(function(msg) {
+  
+  // let rotatedPointCloud = [];
+  msg.ranges.forEach(function (item, index) {
+    if (item >= msg.range_min && item <= msg.range_max) {
+      const angle = msg.angle_min + index * msg.angle_increment;
+      var scan_x = item * Math.cos(angle);
+      var scan_y = item * Math.sin(angle);
+      console.log('Received scan data:', scan_x, scan_y);
+    }
+  });
+
 });
 
 robot_poseSubscriber.subscribe(function(message) {
