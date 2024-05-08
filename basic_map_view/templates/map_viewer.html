@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Viewer</title>
+    <script>
+        function reloadMapImage() {
+            var mapImage = document.getElementById("mapImage");
+            // Update the src attribute of the image to trigger a reload
+            mapImage.src = "/map?" + new Date().getTime();
+        }
+        
+        // Call reloadMapImage every 5 seconds (adjust as needed)
+        setInterval(reloadMapImage, 500);
+
+        // Function to handle click event on the map image
+        function handleMapClick(event) {
+            var mapImage = document.getElementById("mapImage");
+            var rect = mapImage.getBoundingClientRect();
+            var offsetX = event.clientX - rect.left;
+            var offsetY = event.clientY - rect.top;
+            // const offsetX = event.offsetX;
+            // const offsetY = event.offsetY;
+            // console.log("Clicked coordinates (pixels):", offsetX, offsetY);
+
+            // var resolution = mapImage.naturalWidth / mapImage.width;
+            // var width = mapImage.naturalWidth;
+            // var height = mapImage.naturalHeight;
+
+            
+
+            // Send the clicked coordinates to the server
+            fetch('/click', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({x: offsetX, y: offsetY})
+            }).then(response => {
+                if (response.ok) {
+                    console.log('Click event sent successfully.');
+                    // console.log("Resolution:", resolution);
+                    // console.log("Width:", width);
+                    // console.log("Height:", height);
+
+                } else {
+                    console.error('Failed to send click event.');
+                }
+            }).catch(error => {
+                console.error('Error while sending click event:', error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Map Viewer</h1>
+    <!-- Display the map image -->
+    <img id="mapImage" src="/map" alt="Map Image" onclick="handleMapClick(event)">
+</body>
+</html>
