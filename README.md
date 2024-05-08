@@ -24,6 +24,9 @@ To get started with the Robot Fleet Management System, follow these steps:
         ros-${ROS_DISTRO}-nav2-bringup \
         ros-${ROS_DISTRO}-turtlebot3-gazebo \
         ros-${ROS_DISTRO}-rosbridge-*
+
+   pip3 install Flask \
+         flask-cors
    
    source /opt/ros/${ROS_DISTRO}/setup.bash
    export TURTLEBOT3_MODEL=waffle
