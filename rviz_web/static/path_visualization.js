@@ -96,7 +96,7 @@ scanSubscriber.subscribe(function(msg) {
       var scan_y = item * Math.sin(angle);
       // const image_robot_scan = mapToImageCoordinates(scan_x, scan_y);
       // console.log('image_robot_pose:', image_robot_pose);
-      // drawFilledCircle(image_robot_scan.x, image_robot_scan.y, 5, "red");
+      // drawFilledCircle(image_robot_scan.x, image_robot_scan.y, 1, "red");
       // console.log('Received scan data:', scan_x, scan_y);
     }
   });
