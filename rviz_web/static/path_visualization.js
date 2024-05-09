@@ -94,7 +94,10 @@ scanSubscriber.subscribe(function(msg) {
       const angle = msg.angle_min + index * msg.angle_increment;
       var scan_x = item * Math.cos(angle);
       var scan_y = item * Math.sin(angle);
-      console.log('Received scan data:', scan_x, scan_y);
+      // const image_robot_scan = mapToImageCoordinates(scan_x, scan_y);
+      // console.log('image_robot_pose:', image_robot_pose);
+      // drawFilledCircle(image_robot_scan.x, image_robot_scan.y, 5, "red");
+      // console.log('Received scan data:', scan_x, scan_y);
     }
   });
 
