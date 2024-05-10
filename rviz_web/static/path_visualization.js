@@ -1,3 +1,5 @@
+// let tfModule = import(`static/tf.js`);
+// import tf from 'static.tf.js';
 var maps = {}; // Dictionary to store maps and their canvas elements
 var canvas, ctx, scaleX, scaleY, startX, startY, mouseUpPose, mouseDownPose;
 var mapName;
@@ -18,6 +20,7 @@ let start_point = undefined;
 let delta = undefined;
 sprite.src = "static/icons/simplegoal.png";
 // const Quaternion = require('quaternion');
+// let tf = tfModule.tf;
 
 // ros2 run rosbridge_server rosbridge_websocket
 // ros2 launch nav2_bringup tb3_simulation_launch.py slam:=True
@@ -60,11 +63,11 @@ var pathSubscriber = new ROSLIB.Topic({
 });
 
 // Create the tf2Subscriber
-var tf2Subscriber = new ROSLIB.Topic({
-  ros: ros,
-  name: '/tf',
-  messageType: 'tf2_msgs/msg/TFMessage'
-});
+// var tf2Subscriber = new ROSLIB.Topic({
+//   ros: ros,
+//   name: '/tf',
+//   messageType: 'tf2_msgs/msg/TFMessage'
+// });
 
 var robot_poseSubscriber = new ROSLIB.Topic({
   ros: ros,
@@ -85,9 +88,20 @@ var scanSubscriber = new ROSLIB.Topic({
   messageType: 'sensor_msgs/msg/LaserScan'
 });
 
+// const tfClient = new ROSLIB.TFClient({
+//   ros: ros,
+//   fixedFrame: 'map'  // Adjust the fixed frame as needed
+// });
+
+// // // Lookup a transform
+// tfClient.subscribe('/tf', (tfMessage) => {
+//   const transform = tfMessage.lookupTransform('map', 'base_link');
+//   console.log('Transform:', transform);
+// });
 
 scanSubscriber.subscribe(function(msg) {
-  
+  // var pose = tf.absoluteTransforms[msg.header.frame_id];
+  // console.log('scan_msg_frame_id --> ', msg.header.frame_id);
   // let rotatedPointCloud = [];
   msg.ranges.forEach(function (item, index) {
     if (item >= msg.range_min && item <= msg.range_max) {
@@ -115,21 +129,20 @@ robot_poseSubscriber.subscribe(function(message) {
 });
 
 
-tf2Subscriber.subscribe(function(msg) {
-  
-  for (const transform of msg.transforms) {
-    
-    // console.log('Received TF2 message:', transform.header.frame_id);
-    const translation = transform.transform.translation;
-    const rotation = transform.transform.rotation;
-    
-    // console.log('Received transform:');
-    // console.log('Translation:', translation);
-    // console.log('Rotation:', rotation);
-    
-
-  }
-});
+// tf2Subscriber.subscribe(function(msg) {
+//   for (const transform of msg.transforms) {
+//     // console.log(transform);
+//     if (transform.child_frame_id === 'base_footprint') {
+//       // Found the transform between 'scan' and 'base_link'
+//       const translation = transform.transform.translation;
+//       const rotation = transform.transform.rotation;
+//       console.log('Transformation from scan to base_link:');
+//       console.log('Translation:', translation);
+//       console.log('Rotation:', rotation);
+//       return; // Exit the loop if found
+//   }
+//   }
+// });
 
 mapview.subscribe(function(map_msg) {
   mapName = mapview.name; // Assuming topic name represents map name
