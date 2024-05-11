@@ -24,7 +24,7 @@ class Ros2_node(Node):
             robot_pose = self.tf_buffer.lookup_transform('map', 'base_footprint', rclpy.time.Time().to_msg())
             robot_pose_msg = self.transform_to_pose_stamped(robot_pose)
             self.robot_pose_pose_pub.publish(robot_pose_msg)
-
+            
             map_to_base_scan = self.tf_buffer.lookup_transform('map', 'base_scan', rclpy.time.Time().to_msg())
             map_to_base_scan_msg = self.transform_to_pose_stamped(map_to_base_scan)
             self.map_to_base_scan_pub.publish(map_to_base_scan_msg)
