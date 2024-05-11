@@ -13,11 +13,13 @@ var mouse_x = null;
 var mouse_y = null;
 var init_start_point = null;
 var init_delta = null;
+var scan_rotation = null;
 
 let active = false;
 let sprite = new Image();
 let start_point = undefined;
 let delta = undefined;
+
 sprite.src = "static/icons/simplegoal.png";
 // const Quaternion = require('quaternion');
 // let tf = tfModule.tf;
@@ -75,6 +77,12 @@ var robot_poseSubscriber = new ROSLIB.Topic({
   messageType: 'geometry_msgs/PoseStamped'
 });
 
+var scan_pose_Subscriber = new ROSLIB.Topic({
+  ros: ros,
+  name: '/scan_pose',
+  messageType: 'geometry_msgs/PoseStamped'
+});
+
 // Create a ROSLIB.Topic object for publishing
 var goalPosePublisher = new ROSLIB.Topic({
     ros: ros,
@@ -99,6 +107,11 @@ var scanSubscriber = new ROSLIB.Topic({
 //   console.log('Transform:', transform);
 // });
 
+scan_pose_Subscriber.subscribe(function(msg) {
+  scan_rotation = msg.pose.orientation;
+
+});
+
 scanSubscriber.subscribe(function(msg) {
   // var pose = tf.absoluteTransforms[msg.header.frame_id];
   // console.log('scan_msg_frame_id --> ', msg.header.frame_id);
@@ -108,6 +121,10 @@ scanSubscriber.subscribe(function(msg) {
       const angle = msg.angle_min + index * msg.angle_increment;
       var scan_x = item * Math.cos(angle);
       var scan_y = item * Math.sin(angle);
+      if(scan_rotation !== null)
+      {
+        console.log(scan_rotation);
+      }
       // const image_robot_scan = mapToImageCoordinates(scan_x, scan_y);
       // console.log('image_robot_pose:', image_robot_pose);
       // drawFilledCircle(image_robot_scan.x, image_robot_scan.y, 1, "red");
