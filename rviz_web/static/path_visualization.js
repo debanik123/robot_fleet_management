@@ -131,10 +131,10 @@ scanSubscriber.subscribe(function(msg) {
         // console.log(qn);
         var rotated_scan_vec = applyRotation(scan_vec, qn, false);
         // console.log(rotated_scan_vec);
-        const image_robot_scan = mapToImageCoordinates(rotated_scan_vec.x, rotated_scan_vec.y);
-        console.log('image_robot_pose:', image_robot_scan);
-        drawFilledCircle(image_robot_scan.x, image_robot_scan.y, 2, "red");
-        // rotatedPointCloud.push(applyRotation(scan_vec, qn, false));
+        // const image_robot_scan = mapToImageCoordinates(rotated_scan_vec.x, rotated_scan_vec.y);
+        // console.log('image_robot_pose:', image_robot_scan);
+        // drawFilledCircle(image_robot_scan.x, image_robot_scan.y, 2, "red");
+        rotatedPointCloud.push(rotated_scan_vec);
       }
       // 
       // console.log('image_robot_pose:', image_robot_pose);
@@ -145,9 +145,9 @@ scanSubscriber.subscribe(function(msg) {
 
   console.log("rotatedPointCloud",rotatedPointCloud);
 
-  // data = {};
-  // data.pose = scan_pose;
-  // data.points = rotatedPointCloud;
+  data = {};
+  data.pose = scan_pose;
+  data.points = rotatedPointCloud;
 
 });
 
