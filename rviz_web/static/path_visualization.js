@@ -13,7 +13,7 @@ var mouse_x = null;
 var mouse_y = null;
 var init_start_point = null;
 var init_delta = null;
-var scan_rotation = null;
+var scan_pose = null;
 
 let active = false;
 let sprite = new Image();
@@ -108,22 +108,28 @@ var scanSubscriber = new ROSLIB.Topic({
 // });
 
 scan_pose_Subscriber.subscribe(function(msg) {
-  scan_rotation = msg.pose.orientation;
+  scan_pose = msg.pose;
 
 });
 
 scanSubscriber.subscribe(function(msg) {
   // var pose = tf.absoluteTransforms[msg.header.frame_id];
   // console.log('scan_msg_frame_id --> ', msg.header.frame_id);
-  // let rotatedPointCloud = [];
+  let rotatedPointCloud = [];
   msg.ranges.forEach(function (item, index) {
     if (item >= msg.range_min && item <= msg.range_max) {
       const angle = msg.angle_min + index * msg.angle_increment;
       var scan_x = item * Math.cos(angle);
       var scan_y = item * Math.sin(angle);
-      if(scan_rotation !== null)
+      var scan_vec = {x: scan_x, 
+                      y: scan_y, 
+                      z: 0}
+      if(scan_pose !== null)
       {
-        console.log(scan_rotation);
+        // console.log(scan_pose.orientation);
+        var qn = new Quaternion(scan_pose.orientation);
+        // console.log(qn);
+        rotatedPointCloud.push(applyRotation(scan_vec, qn, false));
       }
       // const image_robot_scan = mapToImageCoordinates(scan_x, scan_y);
       // console.log('image_robot_pose:', image_robot_pose);
@@ -131,6 +137,12 @@ scanSubscriber.subscribe(function(msg) {
       // console.log('Received scan data:', scan_x, scan_y);
     }
   });
+
+  console.log("rotatedPointCloud",rotatedPointCloud);
+
+  // data = {};
+  // data.pose = scan_pose;
+  // data.points = rotatedPointCloud;
 
 });
 
@@ -477,6 +489,23 @@ function createGoalPoseWithOrientation(x, y, orientation) {
   });
 
   return poseMsg;
+}
+
+function applyRotation(vector, r, inverse){
+	if(inverse)
+		r = r.inverse();
+		
+	const v = r.rotateVector([
+		vector.x,
+		vector.y,
+		vector.z
+	]);
+
+	return {
+		x: v[0],
+		y: v[1],
+		z: v[2]
+	}
 }
 
 function calculateOrientationQuaternion(upPoseX, upPoseY, downPoseX, downPoseY) 
