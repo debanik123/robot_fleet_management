@@ -129,9 +129,14 @@ scanSubscriber.subscribe(function(msg) {
         // console.log(scan_pose.orientation);
         var qn = new Quaternion(scan_pose.orientation);
         // console.log(qn);
-        rotatedPointCloud.push(applyRotation(scan_vec, qn, false));
+        var rotated_scan_vec = applyRotation(scan_vec, qn, false);
+        // console.log(rotated_scan_vec);
+        const image_robot_scan = mapToImageCoordinates(rotated_scan_vec.x, rotated_scan_vec.y);
+        console.log('image_robot_pose:', image_robot_scan);
+        drawFilledCircle(image_robot_scan.x, image_robot_scan.y, 2, "red");
+        // rotatedPointCloud.push(applyRotation(scan_vec, qn, false));
       }
-      // const image_robot_scan = mapToImageCoordinates(scan_x, scan_y);
+      // 
       // console.log('image_robot_pose:', image_robot_pose);
       // drawFilledCircle(image_robot_scan.x, image_robot_scan.y, 1, "red");
       // console.log('Received scan data:', scan_x, scan_y);
