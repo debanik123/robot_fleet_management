@@ -191,6 +191,7 @@ function scan_viz(msg) {
         var qn = new Quaternion(scan_pose.orientation);
         var rotated_scan_vec = applyRotation(scan_vec, qn, false);
         
+        // let outputVector =  Object.assign({}, inputVector);
         // Apply translation
         var translated_scan_vec = {
           x: rotated_scan_vec.x + scan_pose.position.x,
