@@ -70,23 +70,17 @@ function drag(event) {
     handle.style.left = `${x}px`;
     handle.style.top = `${y}px`;
 
-    let resolution = 0.01;
-    let linearVel = Math.sqrt(x * x + y * y)*resolution;
-
-    let minLinearVel = 0.0; // Minimum linear velocity in meters per second
-    let maxLinearVel = 1.0; // Maximum linear velocity in meters per second
-    
-    linearVel = Math.min(Math.max(linearVel, minLinearVel), maxLinearVel);
-
-    // let yaw = Math.atan2(y, -x);
-    let yaw = Math.atan(joy_delta.y / -joy_delta.x);
-    let angularVel = yaw;
+    let resolution = 0.002;
+    let linearVel = Math.sqrt(joy_delta.x * joy_delta.x + joy_delta.y * joy_delta.y)*resolution;
+    linearVel *= -Math.sign(joy_delta.x);
+    const angularVel = Math.atan(joy_delta.y / -joy_delta.x);
     // let max_angular = 1.5;
     // let angularVel = max_angular * Math.sin(yaw);
 
     // console.log(joy_delta, yaw);
     // Send velocities to robot control
     sendVelocities(linearVel, angularVel);
+    // console.log(linearVel, angularVel);
 }
 
 function endDrag() {
