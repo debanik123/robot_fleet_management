@@ -54,14 +54,15 @@ function drag(event) {
     if (joy_start_point === undefined) return;
     var bounds = joystick.getBoundingClientRect();
 	const { clientX, clientY } = event.touches ? event.touches[0] : event;
-	joy_delta = {
-		x: joy_start_point.x - clientX,
-		y: joy_start_point.y - clientY,
-	}
+	
 
     let x = event.clientX - bounds.left;
     let y = event.clientY - bounds.top;
 
+    joy_delta = {
+		x: joy_start_point.x - clientX,
+		y: joy_start_point.y - clientY,
+	}
     // Ensure handle stays inside joystick boundary
     x = Math.max(0, Math.min(x, bounds.width));
     y = Math.max(0, Math.min(y, bounds.height));
@@ -77,11 +78,13 @@ function drag(event) {
     
     linearVel = Math.min(Math.max(linearVel, minLinearVel), maxLinearVel);
 
-    let yaw = Math.atan2(y, -x);
-    let max_angular = 1.5;
-    let angularVel = max_angular * Math.sin(yaw);
+    // let yaw = Math.atan2(y, -x);
+    let yaw = Math.atan(joy_delta.y / -joy_delta.x);
+    let angularVel = yaw;
+    // let max_angular = 1.5;
+    // let angularVel = max_angular * Math.sin(yaw);
 
-    // console.log(x, y, angularVel, linearVel);
+    // console.log(joy_delta, yaw);
     // Send velocities to robot control
     sendVelocities(linearVel, angularVel);
 }
