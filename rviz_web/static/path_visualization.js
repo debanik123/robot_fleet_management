@@ -130,10 +130,21 @@ scanSubscriber.subscribe(function(msg) {
         var qn = new Quaternion(scan_pose.orientation);
         // console.log(qn);
         var rotated_scan_vec = applyRotation(scan_vec, qn, false);
+
+        // Apply translation
+        var translated_scan_vec = {
+          x: rotated_scan_vec.x + scan_pose.position.x,
+          y: rotated_scan_vec.y + scan_pose.position.y,
+          z: rotated_scan_vec.z + scan_pose.position.z
+        };
+
         // console.log(rotated_scan_vec);
         // const image_robot_scan = mapToImageCoordinates(rotated_scan_vec.x, rotated_scan_vec.y);
+        const image_robot_scan = mapToImageCoordinates(translated_scan_vec.x, translated_scan_vec.y);
+        drawFilledCircle(image_robot_scan.x, image_robot_scan.y, 2, "red");
+        // rotatedPointCloud.push(translated_scan_vec);
         // console.log('image_robot_pose:', image_robot_scan);
-        // drawFilledCircle(image_robot_scan.x, image_robot_scan.y, 2, "red");
+        drawFilledCircle(image_robot_scan.x, image_robot_scan.y, 2, "red");
         rotatedPointCloud.push(rotated_scan_vec);
       }
       // 
@@ -143,11 +154,16 @@ scanSubscriber.subscribe(function(msg) {
     }
   });
 
-  console.log("rotatedPointCloud",rotatedPointCloud);
+  // if (rotatedPointCloud.length > 0) 
+  // {
+  //   // console.log("rotatedPointCloud",rotatedPointCloud);
+  //   // let translation =  Object.assign({}, scan_pose);
+  //   // console.log("translation --> ", translation);
+  // }
 
-  data = {};
-  data.pose = scan_pose;
-  data.points = rotatedPointCloud;
+  // data = {};
+  // data.pose = scan_pose;
+  // data.points = rotatedPointCloud;
 
 });
 
