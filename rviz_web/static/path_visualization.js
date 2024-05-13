@@ -200,7 +200,7 @@ function scan_viz(msg) {
         };
         
         const image_robot_scan = mapToImageCoordinates(translated_scan_vec.x, translated_scan_vec.y);
-        drawFilledCircle(image_robot_scan.x, image_robot_scan.y, 2, "red");
+        drawFilledCircle(image_robot_scan.x, image_robot_scan.y, 1 , "red");
       }
     }
   });
