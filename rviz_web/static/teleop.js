@@ -71,7 +71,11 @@ function drag(event) {
 
     let resolution = 0.01;
     let linearVel = Math.sqrt(x * x + y * y)*resolution;
-    // linearVel = Math.max(0, Math.min(1.0, linearVel));
+
+    let minLinearVel = 0.0; // Minimum linear velocity in meters per second
+    let maxLinearVel = 1.0; // Maximum linear velocity in meters per second
+    
+    linearVel = Math.min(Math.max(linearVel, minLinearVel), maxLinearVel);
 
     let yaw = Math.atan2(y, -x);
     let max_angular = 1.5;
