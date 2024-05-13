@@ -1,4 +1,5 @@
 // Connect to ROS2
+var connectStatus = false;
 const ros = new ROSLIB.Ros({
     url: 'ws://localhost:9090'  // Adjust the URL based on your ROS2 WebSocket server configuration
 });
@@ -23,37 +24,41 @@ const cmdVelPublisher = new ROSLIB.Topic({
 });
 
 // Create a nipple joystick
-const options = {
-    zone: document.getElementById('joystick'),
+var options = {
+    zone: document.getElementById('zone_joystick'),
+    threshold: 0.1,
+    position: { left: 50 + '%' },
     mode: 'static',
-    position: { left: '50%', top: '50%' },
-    color: 'blue',
-    size: 200
-};
+    size: 150,
+    color: '#000000',
+  };
 
 const joystick = nipplejs.create(options);
 
-// Event listener for joystick movement
-joystick.on('move', function (event, nipple) {
-    // Normalize the joystick position to [-1, 1] range
-    const x = nipple.position.x / 100 - 0.5;
-    const y = 0.5 - nipple.position.y / 100;
-
-    // Calculate linear and angular velocities
-    var max_linear_vel = 1.5;
-    var max_angular_vel = 2.0;
-
-    const linearVel = y * max_linear_vel;
-    const angularVel = x * max_angular_vel;
-
-    // Send velocities to robot control
-    sendVelocities(linearVel, angularVel);
+joystick.on('start', function (_event, _nipple) {
+    // Enable a function that runs continuously and send Twist messages
+    timer = setInterval(function () {
+        sendVelocities(linear_speed, angular_speed);
+        // console.log(linear_speed, angular_speed);
+      }, 25);
 });
 
-// Event listener for joystick release
+joystick.on('move', function (_event, nipple) {
+    max_linear = 1.0; // m/s
+    max_angular = 2.0; // rad/s
+    max_distance = 75.0; // pixels;
+    linear_speed = Math.sin(nipple.angle.radian) * max_linear * nipple.distance/max_distance;
+    angular_speed = -Math.cos(nipple.angle.radian) * max_angular * nipple.distance/max_distance;
+});
+
 joystick.on('end', function () {
-    // Stop robot movement
-    sendVelocities(0, 0);
+    // Stop timer if it is enabled and set linear speed to zero to stop robot
+    if (timer) {
+        clearInterval(timer);
+    }
+
+    if (connectStatus)
+        sendVelocities(0.0, 0.0);
 });
 
 function sendVelocities(linearVel, angularVel) {
