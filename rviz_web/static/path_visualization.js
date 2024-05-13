@@ -110,12 +110,19 @@ var scanSubscriber = new ROSLIB.Topic({
 
 scan_pose_Subscriber.subscribe(function(msg) {
   scan_pose = msg.pose;
+  if (mapData !== null) 
+  {
+    visualizeMap(mapData);
+  }
 
 });
 
 scanSubscriber.subscribe(function(msg) {
   scan_msg = msg;
-  // scan_viz(scan_msg);
+  if (mapData !== null) 
+  {
+    visualizeMap(mapData);
+  }
 
 });
 
