@@ -65,13 +65,6 @@ var pathSubscriber = new ROSLIB.Topic({
     messageType : 'nav_msgs/Path'
 });
 
-// Create the tf2Subscriber
-// var tf2Subscriber = new ROSLIB.Topic({
-//   ros: ros,
-//   name: '/tf',
-//   messageType: 'tf2_msgs/msg/TFMessage'
-// });
-
 var robot_poseSubscriber = new ROSLIB.Topic({
   ros: ros,
   name: '/robot_pose',
@@ -97,17 +90,6 @@ var scanSubscriber = new ROSLIB.Topic({
   messageType: 'sensor_msgs/msg/LaserScan'
 });
 
-// const tfClient = new ROSLIB.TFClient({
-//   ros: ros,
-//   fixedFrame: 'map'  // Adjust the fixed frame as needed
-// });
-
-// // // Lookup a transform
-// tfClient.subscribe('/tf', (tfMessage) => {
-//   const transform = tfMessage.lookupTransform('map', 'base_link');
-//   console.log('Transform:', transform);
-// });
-
 scan_pose_Subscriber.subscribe(function(msg) {
   scan_pose = msg.pose;
   if (mapData !== null) 
@@ -119,10 +101,10 @@ scan_pose_Subscriber.subscribe(function(msg) {
 
 scanSubscriber.subscribe(function(msg) {
   scan_msg = msg;
-  if (mapData !== null) 
-  {
-    visualizeMap(mapData);
-  }
+  // if (mapData !== null) 
+  // {
+  //   visualizeMap(mapData);
+  // }
 
 });
 
@@ -131,28 +113,12 @@ robot_poseSubscriber.subscribe(function(message) {
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
   robot_pose = message.pose;
   // console.log('Received pose:', robot_pose);
-  if (mapData !== null) 
-  {
-    visualizeMap(mapData);
-  }
+  // if (mapData !== null) 
+  // {
+  //   visualizeMap(mapData);
+  // }
 
 });
-
-
-// tf2Subscriber.subscribe(function(msg) {
-//   for (const transform of msg.transforms) {
-//     // console.log(transform);
-//     if (transform.child_frame_id === 'base_footprint') {
-//       // Found the transform between 'scan' and 'base_link'
-//       const translation = transform.transform.translation;
-//       const rotation = transform.transform.rotation;
-//       console.log('Transformation from scan to base_link:');
-//       console.log('Translation:', translation);
-//       console.log('Rotation:', rotation);
-//       return; // Exit the loop if found
-//   }
-//   }
-// });
 
 mapview.subscribe(function(map_msg) {
   mapName = mapview.name; // Assuming topic name represents map name
@@ -269,7 +235,7 @@ pathSubscriber.subscribe(function(pathMsg) {
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
   path_g = pathMsg.poses
   
-  visualizeMap(mapData);
+  // visualizeMap(mapData);
     // console.log(pathMsg.poses);
 });
 
@@ -283,17 +249,9 @@ function visualizePath(poses) {
         // ctx.clearRect(0, 0, canvas.width, canvas.height);
         const pose1 = poses[i].pose.position;
         const pose2 = poses[i + 1].pose.position;
-        
-        // console.log(`Path Segment ${i+1}:`);
-        // console.log(`Pose 1: (${pose1.x}, ${pose1.y})`);
-        // console.log(`Pose 2: (${pose2.x}, ${pose2.y})`);
 
         const imageCoords1 = mapToImageCoordinates(pose1.x, pose1.y);
         const imageCoords2 = mapToImageCoordinates(pose2.x, pose2.y);
-
-        // p1_x = parseInt(imageCoords1.x); 
-        // p1_y = parseInt(imageCoords1.y);
-        // console.log(`Pose 1: (${p1_x}, ${p1_y})`);
 
         ctx.beginPath();
         ctx.moveTo(imageCoords1.x, imageCoords1.y);
@@ -305,21 +263,7 @@ function visualizePath(poses) {
     
 }
 
-function mapToImageCoordinates(robot_x, robot_y) {
-    // Extract map information
-    const map_resolution = mapData.info.resolution;
-    const map_origin_x = mapData.info.origin.position.x;
-    const map_origin_y = mapData.info.origin.position.y;
-    const image_width = mapData.info.width;
-    const image_height = mapData.info.height;
 
-    // Convert robot's map coordinates to image coordinates
-    const pixel_x = Math.floor((robot_x - map_origin_x) / map_resolution);
-    const pixel_y = Math.floor(image_height - (robot_y - map_origin_y) / map_resolution);  // Invert y-axis
-
-    // return { x: pixel_x, y: pixel_y };
-    return { x: pixel_x * scaleX, y: pixel_y * scaleY };
-}
 
 var mapContainer = document.getElementById('map-container');
 mapContainer.addEventListener('mousedown', function(event) {
@@ -355,9 +299,6 @@ mapContainer.addEventListener('mouseup', function(event) {
   drawArrow();
   init_start_point = start_point;
   init_delta = delta;
-  // static_drawArrow(start_point, delta);
-  // var orientation = calculateOrientationQuaternion(start_point.x, start_point.y, delta.x, delta.y);
-  // handleMapClick(start_point.x, start_point.y, orientation);
   start_point = undefined;
 	delta = undefined;
 
@@ -422,6 +363,22 @@ function send_nav2_goal_Message(pos, delta){
 	// status.setOK();
 }
 
+function mapToImageCoordinates(robot_x, robot_y) {
+  // Extract map information
+  const map_resolution = mapData.info.resolution;
+  const map_origin_x = mapData.info.origin.position.x;
+  const map_origin_y = mapData.info.origin.position.y;
+  const image_width = mapData.info.width;
+  const image_height = mapData.info.height;
+
+  // Convert robot's map coordinates to image coordinates
+  const pixel_x = Math.floor((robot_x - map_origin_x) / map_resolution);
+  const pixel_y = Math.floor(image_height - (robot_y - map_origin_y) / map_resolution);  // Invert y-axis
+
+  // return { x: pixel_x, y: pixel_y };
+  return { x: pixel_x * scaleX, y: pixel_y * scaleY };
+}
+
 function imageToMapCoordinates(pixel_x, pixel_y) {
   // Extract map information
   const map_resolution = mapData.info.resolution;
@@ -440,24 +397,10 @@ function imageToMapCoordinates(pixel_x, pixel_y) {
   return { x: robot_x, y: robot_y };
 }
 
-function handleMapClick(mouseX, mouseY, orientation) {
-  var mapCoordinates = imageToMapCoordinates(mouseX / scaleX, mouseY / scaleY);
-  console.log('Clicked at map path coordinates (x:', mouseX / scaleX, ', y:', mouseY / scaleY, ')');
-  // var theta = Math.PI / 4; // Angle in radians (45 degrees)
-  var goalPose = createGoalPoseWithOrientation(mapCoordinates.x, mapCoordinates.y, orientation);
-  // console.log(goalPose);
-
-  goalPosePublisher.publish(goalPose);
-}
 
 
 
 function drawArrow() {
-  // const wid = canvas.width;
-  // const hei = canvas.height;
-
-  // ctx.clearRect(0, 0, wid, hei);
-
   if(delta){
     let ratio = sprite.naturalHeight/sprite.naturalWidth;
 
@@ -478,35 +421,6 @@ function drawFilledCircle(centerX, centerY, radius, color) {
   ctx.fill();
 }
 
-function createQuaternion(theta) {
-  var qx = 0.0;
-  var qy = 0.0;
-  var qz = Math.sin(theta / 2);
-  var qw = Math.cos(theta / 2);
-  
-  return { x: qx, y: qy, z: qz, w: qw };
-}
-
-// Function to create and return a goal pose message with position (x, y) and orientation theta
-function createGoalPoseWithOrientation(x, y, orientation) {
-  // Create the quaternion orientation
-  // var orientation = createQuaternion(theta);
-
-  // Define the pose data
-  var poseMsg = new ROSLIB.Message({
-      header: {
-          stamp: { sec: 0, nanosec: 0 },
-          frame_id: 'map'
-      },
-      pose: {
-          position: { x: x, y: y, z: 0.0 },
-          orientation: orientation
-      }
-  });
-
-  return poseMsg;
-}
-
 function applyRotation(vector, r, inverse){
 	if(inverse)
 		r = r.inverse();
@@ -523,52 +437,6 @@ function applyRotation(vector, r, inverse){
 		z: v[2]
 	}
 }
-
-function calculateOrientationQuaternion(upPoseX, upPoseY, downPoseX, downPoseY) 
-{
-  // Convert mouse coordinates to map coordinates
-  var upPose = imageToMapCoordinates(upPoseX / scaleX, upPoseY / scaleY);
-  var downPose = imageToMapCoordinates(downPoseX / scaleX, downPoseY / scaleY);
-
-  // console.log(`Map upPose coordinates: (${upPose.x}, ${upPose.y})`);
-  // console.log(`Map downPose coordinates: (${downPose.x}, ${downPose.y})`);
-
-  // Calculate the difference between map coordinates of upPose and downPose
-  var xDelta = upPose.x - downPose.x;
-  var yDelta = upPose.y - downPose.y;
-
-  // Calculate theta (rotation angle) based on the difference
-  var thetaRadians = -Math.atan2(xDelta, yDelta);
-
-  // Adjust thetaRadians to get the correct orientation
-  if (thetaRadians >= 0 && thetaRadians <= Math.PI) {
-      thetaRadians += (3 * Math.PI / 2);
-  } else {
-      thetaRadians -= (Math.PI / 2);
-  }
-
-  // Calculate theta in degrees
-  var thetaDegrees = thetaRadians * (180.0 / Math.PI);
-
-  // Calculate quaternion components
-  var qz = Math.sin(-thetaRadians / 2.0);
-  var qw = Math.cos(-thetaRadians / 2.0);
-
-  // Create the orientation quaternion
-  var orientation = new ROSLIB.Quaternion({
-      x: 0,
-      y: 0,
-      z: qz,
-      w: qw
-  });
-
-  // Log the calculated values
-  // console.log(`Map coordinates: (${mapCoordinates.x}, ${mapCoordinates.y})`);
-  console.log(`xDelta: ${xDelta}, yDelta: ${yDelta}, thetaDegrees: ${thetaDegrees}`);
-
-  return orientation;
-}
-
 
 // ROS connection events
 ros.on('connected', function() {
