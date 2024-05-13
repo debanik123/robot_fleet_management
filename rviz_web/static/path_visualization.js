@@ -19,6 +19,7 @@ let active = false;
 let sprite = new Image();
 let start_point = undefined;
 let delta = undefined;
+let scan_msg = undefined;
 
 sprite.src = "static/icons/simplegoal.png";
 // const Quaternion = require('quaternion');
@@ -113,39 +114,11 @@ scan_pose_Subscriber.subscribe(function(msg) {
 });
 
 scanSubscriber.subscribe(function(msg) {
-  // var pose = tf.absoluteTransforms[msg.header.frame_id];
-  // console.log('scan_msg_frame_id --> ', msg.header.frame_id);
-  let rotatedPointCloud = [];
-  msg.ranges.forEach(function (item, index) {
-    if (item >= msg.range_min && item <= msg.range_max) {
-      const angle = msg.angle_min + index * msg.angle_increment;
-      var scan_x = item * Math.cos(angle);
-      var scan_y = item * Math.sin(angle);
-      var scan_vec = {x: scan_x, 
-                      y: scan_y, 
-                      z: 0}
-      if(scan_pose !== null)
-      {
-        // console.log(scan_pose.orientation);
-        var qn = new Quaternion(scan_pose.orientation);
-        // console.log(qn);
-        var rotated_scan_vec = applyRotation(scan_vec, qn, false);
-
-        // Apply translation
-        var translated_scan_vec = {
-          x: rotated_scan_vec.x + scan_pose.position.x,
-          y: rotated_scan_vec.y + scan_pose.position.y,
-          z: rotated_scan_vec.z + scan_pose.position.z
-        };
-        
-        const image_robot_scan = mapToImageCoordinates(translated_scan_vec.x, translated_scan_vec.y);
-        drawFilledCircle(image_robot_scan.x, image_robot_scan.y, 2, "red");
-        rotatedPointCloud.push(rotated_scan_vec);
-      }
-    }
-  });
+  scan_msg = msg;
+  // scan_viz(scan_msg);
 
 });
+
 
 robot_poseSubscriber.subscribe(function(message) {
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -203,6 +176,35 @@ mapview.subscribe(function(map_msg) {
   
 });
 
+function scan_viz(msg) {
+  msg.ranges.forEach(function (item, index) {
+    if (item >= msg.range_min && item <= msg.range_max) {
+      const angle = msg.angle_min + index * msg.angle_increment;
+      var scan_x = item * Math.cos(angle);
+      var scan_y = item * Math.sin(angle);
+      var scan_vec = {x: scan_x, 
+                      y: scan_y, 
+                      z: 0}
+      if(scan_pose !== null)
+      {
+        // Apply rotation
+        var qn = new Quaternion(scan_pose.orientation);
+        var rotated_scan_vec = applyRotation(scan_vec, qn, false);
+        
+        // Apply translation
+        var translated_scan_vec = {
+          x: rotated_scan_vec.x + scan_pose.position.x,
+          y: rotated_scan_vec.y + scan_pose.position.y,
+          z: rotated_scan_vec.z + scan_pose.position.z
+        };
+        
+        const image_robot_scan = mapToImageCoordinates(translated_scan_vec.x, translated_scan_vec.y);
+        drawFilledCircle(image_robot_scan.x, image_robot_scan.y, 2, "red");
+      }
+    }
+  });
+}
+
 function visualizeMap(map_msg) {
   for (var y = 0; y < map_msg.info.height; y++) {
       for (var x = 0; x < map_msg.info.width; x++) {
@@ -235,6 +237,11 @@ function visualizeMap(map_msg) {
     static_drawArrow(init_start_point, init_delta);
     // drawFilledCircle(mouse_x, mouse_y, 5, 'blue');
   }
+
+  if (typeof scan_msg !== 'undefined') {
+    scan_viz(scan_msg);
+  }
+
   
 }
 
