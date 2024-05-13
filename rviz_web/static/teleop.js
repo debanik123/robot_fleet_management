@@ -68,14 +68,16 @@ function drag(event) {
 
     handle.style.left = `${x}px`;
     handle.style.top = `${y}px`;
+
     let resolution = 0.05;
     let linearVel = Math.sqrt(x * x + y * y)*resolution;
-    
+
     let yaw = Math.atan2(y, -x);
     let max_angular = 1.5;
-    let angular_speed = max_angular * Math.sin(yaw);
+    let angularVel = max_angular * Math.sin(yaw);
 
-    console.log(x, y, angular_speed, linearVel);
+    console.log(x, y, linearVel, angularVel);
+    
     // Send velocities to robot control
     // sendVelocities(linearVel, angularVel);
 }
