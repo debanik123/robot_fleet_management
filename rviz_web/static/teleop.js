@@ -1,5 +1,7 @@
 // Connect to ROS2
-var connectStatus = false;
+var joy_start_point = undefined;
+var joy_delta = undefined;
+
 const ros = new ROSLIB.Ros({
     url: 'ws://localhost:9090'  // Adjust the URL based on your ROS2 WebSocket server configuration
 });
@@ -23,43 +25,73 @@ const cmdVelPublisher = new ROSLIB.Topic({
     messageType: 'geometry_msgs/Twist'
 });
 
-// Create a nipple joystick
-var options = {
-    zone: document.getElementById('zone_joystick'),
-    threshold: 0.1,
-    position: { left: 50 + '%' },
-    mode: 'static',
-    size: 150,
-    color: '#000000',
-  };
+const joystick = document.getElementById('joystick');
+const handle = document.getElementById('handle');
 
-const joystick = nipplejs.create(options);
+let isDragging = false;
 
-joystick.on('start', function (_event, _nipple) {
-    // Enable a function that runs continuously and send Twist messages
-    timer = setInterval(function () {
-        sendVelocities(linear_speed, angular_speed);
-        // console.log(linear_speed, angular_speed);
-      }, 25);
-});
+// Event listeners for mouse/touch interactions
+handle.addEventListener('mousedown', startDrag);
+handle.addEventListener('touchstart', startDrag);
 
-joystick.on('move', function (_event, nipple) {
-    max_linear = 1.0; // m/s
-    max_angular = 2.0; // rad/s
-    max_distance = 75.0; // pixels;
-    linear_speed = Math.sin(nipple.angle.radian) * max_linear * nipple.distance/max_distance;
-    angular_speed = -Math.cos(nipple.angle.radian) * max_angular * nipple.distance/max_distance;
-});
+document.addEventListener('mousemove', drag);
+document.addEventListener('touchmove', drag);
 
-joystick.on('end', function () {
-    // Stop timer if it is enabled and set linear speed to zero to stop robot
-    if (timer) {
-        clearInterval(timer);
-    }
+document.addEventListener('mouseup', endDrag);
+document.addEventListener('touchend', endDrag);
 
-    if (connectStatus)
-        sendVelocities(0.0, 0.0);
-});
+function startDrag(event) {
+    var rect = joystick.getBoundingClientRect();
+    const { clientX, clientY } = event.touches ? event.touches[0] : event;
+    joy_start_point = {
+		x: clientX- rect.left,
+		y: clientY - rect.top
+	};
+    event.preventDefault();
+}
+
+function drag(event) {
+    if (joy_start_point === undefined) return;
+    var bounds = joystick.getBoundingClientRect();
+	const { clientX, clientY } = event.touches ? event.touches[0] : event;
+	joy_delta = {
+		x: joy_start_point.x - clientX,
+		y: joy_start_point.y - clientY,
+	}
+
+    let x = event.clientX - bounds.left;
+    let y = event.clientY - bounds.top;
+
+    // Ensure handle stays inside joystick boundary
+    x = Math.max(0, Math.min(x, bounds.width));
+    y = Math.max(0, Math.min(y, bounds.height));
+
+    handle.style.left = `${x}px`;
+    handle.style.top = `${y}px`;
+    let resolution = 0.05;
+    let linearVel = Math.sqrt(x * x + y * y)*resolution;
+    
+    let yaw = Math.atan2(y, -x);
+    let max_angular = 1.5;
+    let angular_speed = max_angular * Math.sin(yaw);
+
+    console.log(x, y, angular_speed, linearVel);
+    // Send velocities to robot control
+    // sendVelocities(linearVel, angularVel);
+}
+
+function endDrag() {
+    isDragging = false;
+    // Reset handle to center position
+    joy_start_point = undefined;
+    joy_delta = undefined;
+
+    handle.style.left = '50%';
+    handle.style.top = '50%';
+
+    // Stop robot movement
+    sendVelocities(0, 0);
+}
 
 function sendVelocities(linearVel, angularVel) {
     // Publish Twist message with calculated velocities
