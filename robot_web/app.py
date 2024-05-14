@@ -4,7 +4,7 @@ from rclpy.node import Node
 from threading import Thread
 from geometry_msgs.msg import PoseStamped
 import tf2_ros
-
+from std_msgs.msg import Bool
 
 transform = None
 
@@ -16,11 +16,17 @@ class Ros2_node(Node):
         self.robot_pose_pose_pub = self.create_publisher(PoseStamped, 'robot_pose', 10)
         self.map_to_base_scan_pub = self.create_publisher(PoseStamped, 'scan_pose', 10)
         self.timer = self.create_timer(0.1, self.update_latest_transform)
+        self.timer_publisher = self.create_publisher(Bool, 'bool_timer', 10)
 
     
     def update_latest_transform(self):
+
         global transform
         try:
+            msg = Bool()
+            msg.data = True
+            self.timer_publisher.publish(msg.data)
+            
             robot_pose = self.tf_buffer.lookup_transform('map', 'base_footprint', rclpy.time.Time().to_msg())
             robot_pose_msg = self.transform_to_pose_stamped(robot_pose)
             self.robot_pose_pose_pub.publish(robot_pose_msg)
@@ -28,6 +34,7 @@ class Ros2_node(Node):
             map_to_base_scan = self.tf_buffer.lookup_transform('map', 'base_scan', rclpy.time.Time().to_msg())
             map_to_base_scan_msg = self.transform_to_pose_stamped(map_to_base_scan)
             self.map_to_base_scan_pub.publish(map_to_base_scan_msg)
+            
             
         except:
             pass
