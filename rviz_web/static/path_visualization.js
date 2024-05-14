@@ -1,9 +1,9 @@
 
 import { mapview, pathSubscriber, 
   robot_poseSubscriber, scan_pose_Subscriber, 
-  scanSubscriber, goalPosePublisher, 
+  scanSubscriber, goalPosePublisher, applyRotation,
   mapToImageCoordinates, imageToMapCoordinates} from './robo_utilities.js';
-
+  
 var maps = {}; // Dictionary to store maps and their canvas elements
 var canvas, ctx, scaleX, scaleY, startX, startY, mouseUpPose, mouseDownPose;
 var mapName;
@@ -343,19 +343,4 @@ function drawFilledCircle(centerX, centerY, radius, color) {
   ctx.fill();
 }
 
-function applyRotation(vector, r, inverse){
-	if(inverse)
-		r = r.inverse();
-		
-	const v = r.rotateVector([
-		vector.x,
-		vector.y,
-		vector.z
-	]);
 
-	return {
-		x: v[0],
-		y: v[1],
-		z: v[2]
-	}
-}

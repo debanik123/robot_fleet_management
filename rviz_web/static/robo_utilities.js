@@ -103,4 +103,20 @@ export function imageToMapCoordinates(pixel_x, pixel_y, mapData) {
   
     return { x: robot_x, y: robot_y };
   }
-  
+
+export function applyRotation(vector, r, inverse){
+	if(inverse)
+		r = r.inverse();
+		
+	const v = r.rotateVector([
+		vector.x,
+		vector.y,
+		vector.z
+	]);
+
+	return {
+		x: v[0],
+		y: v[1],
+		z: v[2]
+	}
+}
