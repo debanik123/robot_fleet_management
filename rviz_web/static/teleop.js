@@ -116,9 +116,9 @@ function onJoystickEnd(event) {
     currentAngularVel = 0;
 
     // Print velocities when joystick ends
-    console.log('Joystick ended');
-    console.log('Current linear velocity:', currentLinearVel);
-    console.log('Current angular velocity:', currentAngularVel);
+    // console.log('Joystick ended');
+    // console.log('Current linear velocity:', currentLinearVel);
+    // console.log('Current angular velocity:', currentAngularVel);
 	sendVelocities(currentLinearVel, currentAngularVel);
 
 }
