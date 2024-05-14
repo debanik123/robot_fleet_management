@@ -5,7 +5,8 @@ import { mapview, pathSubscriber,
   mapToImageCoordinates, imageToMapCoordinates} from './robo_utilities.js';
 
 import {scan_viz} from './scan.js';
-import './goal_publish.js';
+// 
+
 
 var maps = {}; // Dictionary to store maps and their canvas elements
 var canvas, ctx, scaleX, scaleY, startX, startY, mouseUpPose, mouseDownPose;
@@ -14,7 +15,7 @@ var p1_x = null;
 var p1_y = null;
 var path_g = null;
 var robot_pose = null;
-var isDragging = false;
+
 var mapData = null;
 var mouse_x = null;
 var mouse_y = null;
@@ -28,12 +29,15 @@ let start_point = undefined;
 let delta = undefined;
 let scan_msg = undefined;
 
-sprite.src = "static/icons/simplegoal.png";
+// sprite.src = "static/icons/simplegoal.png";
+
+
 // const Quaternion = require('quaternion');
 // let tf = tfModule.tf;
 
 // Map visualization functions
 function createCanvas(mapName) {
+  
   const mapContainer = document.getElementById('map-container');
   canvas = document.createElement('canvas');
   canvas.id = `map-canvas-${mapName}`;
@@ -130,7 +134,7 @@ function visualizeMap(map_msg) {
     drawFilledCircle(ctx, image_robot_pose.x, image_robot_pose.y, 10, "red");
   }
 
-  drawArrow();
+  // drawArrow();
   if (init_start_point !== null && init_delta !== null)
   {
     static_drawArrow(ctx, init_start_point, init_delta);
@@ -143,17 +147,7 @@ function visualizeMap(map_msg) {
   
 }
 
-function getColorForOccupancy(occupancyValue) {
-  if (occupancyValue === 100) {
-      return 'black'; // Occupied space
-  } else if (occupancyValue === 0) {
-      return 'white'; // Free space
-  } else {
-      // Calculate grayscale color based on occupancy value
-      var colorValue = 255 - (occupancyValue * 255) / 100;
-      return 'rgb(' + colorValue + ',' + colorValue + ',' + colorValue + ')';
-  }
-}
+
 
 pathSubscriber.subscribe(function(pathMsg) { 
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -187,75 +181,4 @@ function visualizePath(poses) {
 
 
 
-function send_nav2_goal_Message(pos, delta){
-	if(!pos || !delta){
-		status.setError("Could not send message, pose invalid.");
-		return;
-	}
-  
-	let yaw = Math.atan2(delta.y, -delta.x);
-	let quat = new Quaternion.fromEuler(yaw, 0, 0, 'ZXY');
-
-  var map_pos = imageToMapCoordinates(pos.x / scaleX, pos.y / scaleY, mapData);
-	// let map_pos = view.screenToFixed(pos);
-
-	const currentTime = new Date();
-	const currentTimeSecs = Math.floor(currentTime.getTime() / 1000);
-	const currentTimeNsecs = (currentTime.getTime() % 1000) * 1e6;
-
-	const poseMessage = new ROSLIB.Message({
-		header: {
-			stamp: {
-				secs: currentTimeSecs,
-      			nsecs: currentTimeNsecs
-			},
-			frame_id: 'map'
-		},
-		pose: {
-			position: {
-				x: map_pos.x,
-				y: map_pos.y,
-				z: 0.0
-			},
-			orientation: {
-				x: quat.x,
-				y: quat.y,
-				z: quat.z,
-				w: quat.w
-			}
-		}
-	});	
-	goalPosePublisher.publish(poseMessage);
-	// status.setOK();
-}
-
-
-
-function static_drawArrow(ctx, point, delta)
-{
-  let ratio = sprite.naturalHeight/sprite.naturalWidth;
-  ctx.save();
-  ctx.translate(point.x, point.y);
-  ctx.scale(1.0, 1.0);
-  ctx.rotate(Math.atan2(-delta.y, -delta.x));
-  ctx.drawImage(sprite, -80, -80*ratio, 160, 160*ratio);
-  ctx.restore();
-}
-
-function drawArrow() {
-  if(delta){
-    let ratio = sprite.naturalHeight/sprite.naturalWidth;
-
-    ctx.save();
-    ctx.translate(start_point.x, start_point.y);
-    ctx.scale(1.0, 1.0);
-    ctx.rotate(Math.atan2(-delta.y, -delta.x));
-    ctx.drawImage(sprite, -80, -80*ratio, 160, 160*ratio);
-    ctx.restore();
-  }
-}
-
-
-
-
-
+// import './goal_publish.js';

@@ -32,6 +32,11 @@
     left: 20px;
 }
 
+#map-container {
+    width: 580px;
+    height: 580px;
+    border: 2px solid black; /* Add a black border with 2px width */
+}
 
 /* #teleop_key {
     width: 200px;

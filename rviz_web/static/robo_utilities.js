@@ -127,3 +127,15 @@ export function drawFilledCircle(ctx, centerX, centerY, radius, color) {
     ctx.fillStyle = color;
     ctx.fill();
   }
+
+export function getColorForOccupancy(occupancyValue) {
+    if (occupancyValue === 100) {
+        return 'black'; // Occupied space
+    } else if (occupancyValue === 0) {
+        return 'white'; // Free space
+    } else {
+        // Calculate grayscale color based on occupancy value
+        var colorValue = 255 - (occupancyValue * 255) / 100;
+        return 'rgb(' + colorValue + ',' + colorValue + ',' + colorValue + ')';
+    }
+  }
