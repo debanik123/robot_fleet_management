@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teleoperation Key</title>
+    <title>main robot viz</title>
     <!-- Add necessary scripts and stylesheets -->
 </head>
 <body>
-    <div id="teleopButtonContainer">
-        <button id="teleopButton">Teleop</button>
-    </div>
-    <script type="module" src="static/teleop_key.js"></script>
+    {% include 'teleop_key.html' %}
+    {% include 'teleop_joy.html' %}
 </body>
 </html>
