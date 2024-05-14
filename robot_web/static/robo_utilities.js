@@ -58,6 +58,12 @@ export var goalPosePublisher = new ROSLIB.Topic({
     messageType: 'geometry_msgs/PoseStamped'
 });
 
+export const bool_timerSubscriber = new ROSLIB.Topic({
+  ros: ros,
+  name: '/bool_timer',
+  messageType: 'std_msgs/Bool'
+});
+
 
 export function sendVelocities(linearVel, angularVel) {
     // Publish Twist message with calculated velocities

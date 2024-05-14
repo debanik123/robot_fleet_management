@@ -1,4 +1,4 @@
-import { mapview, pathSubscriber, 
+import { mapview, pathSubscriber, bool_timerSubscriber,
     robot_poseSubscriber, scan_pose_Subscriber, 
     scanSubscriber, goalPosePublisher, drawFilledCircle,
     mapToImageCoordinates, imageToMapCoordinates, getColorForOccupancy} from './robo_utilities.js';
@@ -37,6 +37,16 @@ mapview.subscribe(map_msg => {
     // loadMap(map_msg);
     map_msg_g = map_msg;
 });
+
+// bool_timerSubscriber.subscribe(map_msg => {
+//     loadMap(map_msg_g);
+// });
+
+bool_timerSubscriber.subscribe(function(message) {
+    loadMap(map_msg_g);
+    // console.log('Received boolean message:', message.data);
+    // Add your logic here to handle the received boolean message
+  });
 
 pathSubscriber.subscribe(function(pathMsg) { 
     // ctx.clearRect(0, 0, canvas.width, canvas.height);
