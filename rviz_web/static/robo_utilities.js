@@ -120,3 +120,10 @@ export function applyRotation(vector, r, inverse){
 		z: v[2]
 	}
 }
+
+export function drawFilledCircle(ctx, centerX, centerY, radius, color) {
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+  }

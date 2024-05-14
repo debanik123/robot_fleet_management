@@ -1,9 +1,9 @@
 
 import { mapview, pathSubscriber, 
   robot_poseSubscriber, scan_pose_Subscriber, 
-  scanSubscriber, goalPosePublisher, applyRotation,
+  scanSubscriber, goalPosePublisher, applyRotation, drawFilledCircle,
   mapToImageCoordinates, imageToMapCoordinates} from './robo_utilities.js';
-  
+
 var maps = {}; // Dictionary to store maps and their canvas elements
 var canvas, ctx, scaleX, scaleY, startX, startY, mouseUpPose, mouseDownPose;
 var mapName;
@@ -134,7 +134,7 @@ function scan_viz(msg) {
         };
         
         const image_robot_scan = mapToImageCoordinates(translated_scan_vec.x, translated_scan_vec.y, mapData, scaleX, scaleY);
-        drawFilledCircle(image_robot_scan.x, image_robot_scan.y, 1 , "red");
+        drawFilledCircle(ctx, image_robot_scan.x, image_robot_scan.y, 1 , "red");
       }
     }
   });
@@ -154,7 +154,6 @@ function visualizeMap(map_msg) {
 
   if (path_g !== null) 
   {
-    // drawFilledCircle(ctx, p1_x, p1_y, 5, 'red');
     visualizePath(path_g);
   }
   if (robot_pose !== null) 
@@ -163,14 +162,13 @@ function visualizeMap(map_msg) {
     // var py = robot_pose.position.y;
     const image_robot_pose = mapToImageCoordinates(robot_pose.position.x, robot_pose.position.y, mapData, scaleX, scaleY);
     // console.log('image_robot_pose:', image_robot_pose);
-    drawFilledCircle(image_robot_pose.x, image_robot_pose.y, 10, "red");
+    drawFilledCircle(ctx, image_robot_pose.x, image_robot_pose.y, 10, "red");
   }
 
   drawArrow();
   if (init_start_point !== null && init_delta !== null)
   {
     static_drawArrow(init_start_point, init_delta);
-    // drawFilledCircle(mouse_x, mouse_y, 5, 'blue');
   }
 
   if (typeof scan_msg !== 'undefined') {
@@ -218,8 +216,6 @@ function visualizePath(poses) {
         ctx.moveTo(imageCoords1.x, imageCoords1.y);
         ctx.lineTo(imageCoords2.x, imageCoords2.y);
         ctx.stroke();
-        // visualizeMap(mapData);
-        // drawFilledCircle(ctx, imageCoords1.x, imageCoords1.y, 1, 'red');
     }
     
 }
@@ -336,11 +332,6 @@ function drawArrow() {
 }
 
 
-function drawFilledCircle(centerX, centerY, radius, color) {
-  ctx.beginPath();
-  ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-  ctx.fillStyle = color;
-  ctx.fill();
-}
+
 
 
