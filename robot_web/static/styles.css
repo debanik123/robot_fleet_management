@@ -38,4 +38,12 @@
     /* border: 2px solid black; */
 }
 
+#path_canvas {
+    /* width: 580px;
+    height: 580px; */
+    border: 2px solid black;
+}
+#map_canvas {
+    border: 2px solid rgb(98, 151, 110);
+}
 
