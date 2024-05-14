@@ -27,8 +27,9 @@
 }
 
 #teleopButtonContainer {
-    text-align: center; /* Center the button */
-    margin-bottom: 20px; /* Add some space below the button */
+    position: absolute;
+    bottom: 100px;
+    left: 20px;
 }
 
 
