@@ -71,7 +71,6 @@ robot_poseSubscriber.subscribe(function(message) {
     // console.log('image_robot_pose:', image_robot_pose);
     drawFilledCircle(ctx, image_robot_pose.x, image_robot_pose.y, 10, "red");
     
-  
   });
 
 
