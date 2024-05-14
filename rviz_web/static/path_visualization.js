@@ -187,7 +187,9 @@ function visualizePath(poses) {
 
 
 var mapContainer = document.getElementById('map-container');
-mapContainer.addEventListener('mousedown', function(event) {
+mapContainer.addEventListener('mousedown', onMousedown);
+function onMousedown(event)
+{
   var rect = mapContainer.getBoundingClientRect();
   const { clientX, clientY } = event.touches ? event.touches[0] : event;
 	start_point = {
@@ -199,10 +201,11 @@ mapContainer.addEventListener('mousedown', function(event) {
   console.log('mousedown');
   init_start_point = null;
   init_delta = null;
+}
 
-});
-
-mapContainer.addEventListener('mousemove', function(event) {
+mapContainer.addEventListener('mousemove', onMousemove) ;
+function onMousemove(event)
+{
   if (start_point === undefined) return;
 
 	const { clientX, clientY } = event.touches ? event.touches[0] : event;
@@ -212,9 +215,11 @@ mapContainer.addEventListener('mousemove', function(event) {
 	};
   // drawArrow();
 
-});
+}
 
-mapContainer.addEventListener('mouseup', function(event) {
+mapContainer.addEventListener('mouseup', onMouseup);
+function onMouseup(event)
+{
   console.log('mouseup');
   send_nav2_goal_Message(start_point, delta);
   drawArrow();
@@ -222,8 +227,7 @@ mapContainer.addEventListener('mouseup', function(event) {
   init_delta = delta;
   start_point = undefined;
 	delta = undefined;
-
-});
+}
 
 
 
