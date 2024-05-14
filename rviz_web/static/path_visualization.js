@@ -64,22 +64,12 @@ scan_pose_Subscriber.subscribe(function(msg) {
 
 scanSubscriber.subscribe(function(msg) {
   scan_msg = msg;
-  // if (mapData !== null) 
-  // {
-  //   visualizeMap(mapData);
-  // }
-
 });
 
 
 robot_poseSubscriber.subscribe(function(message) {
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
   robot_pose = message.pose;
-  // console.log('Received pose:', robot_pose);
-  // if (mapData !== null) 
-  // {
-  //   visualizeMap(mapData);
-  // }
 
 });
 
@@ -142,7 +132,7 @@ function visualizeMap(map_msg) {
   drawArrow();
   if (init_start_point !== null && init_delta !== null)
   {
-    static_drawArrow(init_start_point, init_delta);
+    static_drawArrow(ctx, init_start_point, init_delta);
   }
 
   if (typeof scan_msg !== 'undefined') {
@@ -235,16 +225,7 @@ mapContainer.addEventListener('mouseup', function(event) {
 
 });
 
-function static_drawArrow(point, delta)
-{
-  let ratio = sprite.naturalHeight/sprite.naturalWidth;
-  ctx.save();
-  ctx.translate(point.x, point.y);
-  ctx.scale(1.0, 1.0);
-  ctx.rotate(Math.atan2(-delta.y, -delta.x));
-  ctx.drawImage(sprite, -80, -80*ratio, 160, 160*ratio);
-  ctx.restore();
-}
+
 
 function send_nav2_goal_Message(pos, delta){
 	if(!pos || !delta){
@@ -290,7 +271,16 @@ function send_nav2_goal_Message(pos, delta){
 
 
 
-
+function static_drawArrow(ctx, point, delta)
+{
+  let ratio = sprite.naturalHeight/sprite.naturalWidth;
+  ctx.save();
+  ctx.translate(point.x, point.y);
+  ctx.scale(1.0, 1.0);
+  ctx.rotate(Math.atan2(-delta.y, -delta.x));
+  ctx.drawImage(sprite, -80, -80*ratio, 160, 160*ratio);
+  ctx.restore();
+}
 
 function drawArrow() {
   if(delta){
