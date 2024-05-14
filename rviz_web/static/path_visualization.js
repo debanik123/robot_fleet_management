@@ -170,7 +170,7 @@ function visualizePath(poses) {
 
         const imageCoords1 = mapToImageCoordinates(pose1.x, pose1.y, mapData, scaleX, scaleY);
         const imageCoords2 = mapToImageCoordinates(pose2.x, pose2.y, mapData, scaleX, scaleY);
-
+        
         ctx.beginPath();
         ctx.moveTo(imageCoords1.x, imageCoords1.y);
         ctx.lineTo(imageCoords2.x, imageCoords2.y);

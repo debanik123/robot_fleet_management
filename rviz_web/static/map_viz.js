@@ -1,8 +1,14 @@
-import { mapview, mapToImageCoordinates, getColorForOccupancy } from './robo_utilities.js';
+import { mapview, pathSubscriber, 
+    robot_poseSubscriber, scan_pose_Subscriber, 
+    scanSubscriber, goalPosePublisher, drawFilledCircle,
+    mapToImageCoordinates, imageToMapCoordinates, getColorForOccupancy} from './robo_utilities.js';
+
 import { scan_viz } from './scan.js';
 
 const canvasWidth = 480;
 const canvasHeight = 480;
+let path_g = [];
+let map_msg_, cellWidth_, cellHeight_;
 
 const mapContainer = document.getElementById('map-container');
 
@@ -21,6 +27,15 @@ mapview.subscribe(map_msg => {
     console.log(`Received map data for: ${mapview.name}`);
     loadMap(map_msg);
 });
+
+pathSubscriber.subscribe(function(pathMsg) { 
+    // ctx.clearRect(0, 0, canvas.width, canvas.height);
+    path_g = pathMsg.poses
+    visualizePath(path_g, map_msg_, cellWidth_, cellHeight_);
+    
+    // visualizeMap(mapData);
+      // console.log(pathMsg.poses);
+  });
 
 // Function to load the map onto the canvas
 function loadMap(map_msg) {
@@ -51,4 +66,31 @@ function loadMap(map_msg) {
             ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
         }
     }
+    map_msg_ = map_msg;
+    cellWidth_ = cellWidth;
+    cellHeight_ = cellHeight;
+    // visualizePath(path_g, map_msg, cellWidth, cellHeight);
+}
+
+
+function visualizePath(poses, mapData, scaleX, scaleY) {
+    ctx.strokeStyle = 'green';
+    // const darkGreen = '#006400'; // You can adjust the hex code as needed
+    // ctx.strokeStyle = darkGreen;
+    ctx.lineWidth = 2;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < poses.length - 1; i++) {
+        // 
+        const pose1 = poses[i].pose.position;
+        const pose2 = poses[i + 1].pose.position;
+
+        const imageCoords1 = mapToImageCoordinates(pose1.x, pose1.y, mapData, scaleX, scaleY);
+        const imageCoords2 = mapToImageCoordinates(pose2.x, pose2.y, mapData, scaleX, scaleY);
+        
+        ctx.beginPath();
+        ctx.moveTo(imageCoords1.x, imageCoords1.y);
+        ctx.lineTo(imageCoords2.x, imageCoords2.y);
+        ctx.stroke();
+    }
+    
 }
