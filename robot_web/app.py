@@ -15,17 +15,19 @@ class Ros2_node(Node):
         self.tf_listener = tf2_ros.TransformListener(self.tf_buffer, self)
         self.robot_pose_pose_pub = self.create_publisher(PoseStamped, 'robot_pose', 10)
         self.map_to_base_scan_pub = self.create_publisher(PoseStamped, 'scan_pose', 10)
-        self.timer = self.create_timer(0.1, self.update_latest_transform)
+        self.timer = self.create_timer(0.9, self.update_latest_transform)
         self.timer_publisher = self.create_publisher(Bool, 'bool_timer', 10)
 
     
     def update_latest_transform(self):
-
         global transform
+
+        msg = Bool()
+        msg.data = True
+        self.timer_publisher.publish(msg)
+
         try:
-            msg = Bool()
-            msg.data = True
-            self.timer_publisher.publish(msg)
+            
             
             robot_pose = self.tf_buffer.lookup_transform('map', 'base_footprint', rclpy.time.Time().to_msg())
             robot_pose_msg = self.transform_to_pose_stamped(robot_pose)

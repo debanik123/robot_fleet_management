@@ -43,7 +43,13 @@ mapview.subscribe(map_msg => {
 // });
 
 bool_timerSubscriber.subscribe(function(message) {
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     loadMap(map_msg_g);
+    if (path_g !== null) 
+    {
+        visualizePath(path_g, map_msg_, cellWidth_, cellHeight_);
+    }
+    // ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     // console.log('Received boolean message:', message.data);
     // Add your logic here to handle the received boolean message
   });
@@ -64,7 +70,7 @@ function loadMap(map_msg) {
     const mapInfo = map_msg.info;
 
     // Clear the canvas
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    // ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
     // Define cell size based on canvas size and map dimensions
     const cellWidth = canvasWidth / mapInfo.width;
@@ -89,26 +95,26 @@ function loadMap(map_msg) {
 }
 
 
-// function visualizePath(poses, mapData, scaleX, scaleY) {
-//     ctx_path.strokeStyle = 'green';
-//     // const darkGreen = '#006400'; // You can adjust the hex code as needed
-//     // ctx_path.strokeStyle = darkGreen;
-//     ctx_path.lineWidth = 2;
-//     ctx_path.clearRect(0, 0, canvasWidth, canvasHeight);
+function visualizePath(poses, mapData, scaleX, scaleY) {
+    ctx.strokeStyle = 'green';
+    // const darkGreen = '#006400'; // You can adjust the hex code as needed
+    // ctx.strokeStyle = darkGreen;
+    ctx.lineWidth = 2;
+    // ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-//     for (let i = 0; i < poses.length - 1; i++) {
-//         // 
-//         const pose1 = poses[i].pose.position;
-//         const pose2 = poses[i + 1].pose.position;
+    for (let i = 0; i < poses.length - 1; i++) {
+        // 
+        const pose1 = poses[i].pose.position;
+        const pose2 = poses[i + 1].pose.position;
 
         
-//         const imageCoords1 = mapToImageCoordinates(pose1.x, pose1.y, mapData, scaleX, scaleY);
-//         const imageCoords2 = mapToImageCoordinates(pose2.x, pose2.y, mapData, scaleX, scaleY);
+        const imageCoords1 = mapToImageCoordinates(pose1.x, pose1.y, mapData, scaleX, scaleY);
+        const imageCoords2 = mapToImageCoordinates(pose2.x, pose2.y, mapData, scaleX, scaleY);
         
-//         ctx_path.beginPath();
-//         ctx_path.moveTo(imageCoords1.x, imageCoords1.y);
-//         ctx_path.lineTo(imageCoords2.x, imageCoords2.y);
-//         ctx_path.stroke();
-//     }
+        ctx.beginPath();
+        ctx.moveTo(imageCoords1.x, imageCoords1.y);
+        ctx.lineTo(imageCoords2.x, imageCoords2.y);
+        ctx.stroke();
+    }
     
-// }
+}
