@@ -1,5 +1,5 @@
 // Connect to ROS2
-import '../static/lib/nipplejs.js';
+import './lib/nipplejs.js';
 export const nipplejs = window.nipplejs;
 let joy_offset_x = "50%";
 let joy_offset_y = "85%";
