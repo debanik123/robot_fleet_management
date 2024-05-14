@@ -4,23 +4,14 @@ import { mapview, pathSubscriber,
     mapToImageCoordinates, imageToMapCoordinates, getColorForOccupancy} from './robo_utilities.js';
 
 // import { scan_viz } from './scan.js';
-
+import { exportContext } from './ctx.js';
 const canvasWidth = 480;
 const canvasHeight = 480;
+const ctx = exportContext();
+
 let path_g = [];
 let map_msg_, cellWidth_, cellHeight_;
 let robot_pose = null;
-
-const mapContainer = document.getElementById('map-container');
-
-// Create a canvas element and set its attributes
-const canvas = document.createElement('canvas');
-canvas.id = 'map-canvas-map';
-canvas.width = canvasWidth;
-canvas.height = canvasHeight;
-mapContainer.appendChild(canvas);
-
-const ctx = canvas.getContext('2d');
 
 // Subscribe to the map topic and load the map onto the canvas
 mapview.subscribe(map_msg => {
