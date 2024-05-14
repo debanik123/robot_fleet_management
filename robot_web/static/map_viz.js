@@ -13,13 +13,9 @@ let map_msg_, cellWidth_, cellHeight_;
 const mapContainer = document.getElementById('map-container');
 
 // Create a canvas element and set its attributes
-const canvas = document.createElement('canvas');
-canvas.id = 'map-canvas-map1';
+const canvas = document.getElementById('map_canvas');
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
-mapContainer.appendChild(canvas);
-
-// Get the 2D rendering context of the canvas
 const ctx = canvas.getContext('2d');
 
 // Subscribe to the map topic and load the map onto the canvas
@@ -78,11 +74,13 @@ function loadMap(map_msg) {
 //     // const darkGreen = '#006400'; // You can adjust the hex code as needed
 //     // ctx.strokeStyle = darkGreen;
 //     ctx.lineWidth = 2;
-//     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
 //     for (let i = 0; i < poses.length - 1; i++) {
 //         // 
 //         const pose1 = poses[i].pose.position;
 //         const pose2 = poses[i + 1].pose.position;
+
+//         ctx.clearRect(pose1.x, pose1.y , pose2.x, pose2.y);
 
 //         const imageCoords1 = mapToImageCoordinates(pose1.x, pose1.y, mapData, scaleX, scaleY);
 //         const imageCoords2 = mapToImageCoordinates(pose2.x, pose2.y, mapData, scaleX, scaleY);
