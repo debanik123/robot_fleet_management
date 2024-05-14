@@ -9,6 +9,7 @@ const canvasWidth = 480;
 const canvasHeight = 480;
 let path_g = [];
 let map_msg_, cellWidth_, cellHeight_;
+let robot_pose = null;
 
 const mapContainer = document.getElementById('map-container');
 
@@ -62,6 +63,17 @@ function loadMap(map_msg) {
     cellHeight_ = cellHeight;
     // visualizePath(path_g, map_msg, cellWidth, cellHeight);
 }
+
+robot_poseSubscriber.subscribe(function(message) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    robot_pose = message.pose;
+    const image_robot_pose = mapToImageCoordinates(robot_pose.position.x, robot_pose.position.y, map_msg_, cellWidth_, cellHeight_);
+    // console.log('image_robot_pose:', image_robot_pose);
+    drawFilledCircle(ctx, image_robot_pose.x, image_robot_pose.y, 10, "red");
+    
+  
+  });
+
 
 
 // pathSubscriber.subscribe(function(pathMsg) { 
