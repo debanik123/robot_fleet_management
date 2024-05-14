@@ -1,6 +1,6 @@
 
 // import './robo_utilities.js';
-// import { sendVelocities } from './robo_utilities.js';
+import { sendVelocities } from './robo_utilities.js';
 const teleopButton = document.getElementById('teleopButton');
 let targetLinearVel = 0;
 let targetAngularVel = 0;
@@ -17,8 +17,8 @@ teleopButton.addEventListener('click', function() {
 
 // Keyboard event handlers
 function onKeyDown(event) {
-    console.log('targetLinearVel: ', targetLinearVel, 'targetAngularVel: ', targetAngularVel);
-    // sendVelocities(targetLinearVel, targetAngularVel);
+    // console.log('targetLinearVel: ', targetLinearVel, 'targetAngularVel: ', targetAngularVel);
+    sendVelocities(targetLinearVel, targetAngularVel);
     // Capture keyboard data and perform teleoperation
     switch(event.key) {
         case 'ArrowUp':
@@ -108,7 +108,7 @@ function onKeyUp(event) {
     targetLinearVel = 0;
     targetAngularVel = 0;
 
-    // sendVelocities(targetLinearVel, targetAngularVel);
+    sendVelocities(targetLinearVel, targetAngularVel);
 
     // Publish zero velocities
     // sendVelocities(targetLinearVel, targetAngularVel);

@@ -1,7 +1,7 @@
 // Connect to ROS2
 import './lib/nipplejs.js';
 // import './robo_utilities.js';
-// import { sendVelocities } from './robo_utilities.js';
+import { sendVelocities } from './robo_utilities.js';
 
 export const nipplejs = window.nipplejs;
 let joy_offset_x = "50%";
@@ -68,11 +68,11 @@ function onJoystickMove(event, data) {
         currentAngularVel = Math.max(currentAngularVel - decelerationRate, targetAngularVel);
     }
 
-    console.log('targetLinearVel:', targetLinearVel, 'targetAngularVel: ', targetAngularVel);
+    // console.log('targetLinearVel:', targetLinearVel, 'targetAngularVel: ', targetAngularVel);
 
 	// console.log('Current linear velocity:', currentLinearVel);
     // console.log('Current angular velocity:', currentAngularVel);
-	// sendVelocities(currentLinearVel, currentAngularVel);
+	sendVelocities(currentLinearVel, currentAngularVel);
 
 
     // console.log('Joystick force:', data.force);
@@ -89,7 +89,7 @@ function onJoystickEnd(event) {
     // console.log('Joystick ended');
     // console.log('Current linear velocity:', currentLinearVel);
     // console.log('Current angular velocity:', currentAngularVel);
-	// sendVelocities(currentLinearVel, currentAngularVel);
+	sendVelocities(currentLinearVel, currentAngularVel);
 
 }
 
