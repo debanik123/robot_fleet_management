@@ -1,5 +1,6 @@
-// let tfModule = import(`static/tf.js`);
-// import tf from 'static.tf.js';
+
+import { mapview, pathSubscriber, robot_poseSubscriber, scan_pose_Subscriber, scanSubscriber, goalPosePublisher } from './robo_utilities.js';
+
 var maps = {}; // Dictionary to store maps and their canvas elements
 var canvas, ctx, scaleX, scaleY, startX, startY, mouseUpPose, mouseDownPose;
 var mapName;
@@ -25,13 +26,6 @@ sprite.src = "static/icons/simplegoal.png";
 // const Quaternion = require('quaternion');
 // let tf = tfModule.tf;
 
-// ros2 run rosbridge_server rosbridge_websocket
-// ros2 launch nav2_bringup tb3_simulation_launch.py slam:=True
-// ROS connection setup (assuming ROSLIB is already included)
-var ros = new ROSLIB.Ros({
-  url: 'ws://localhost:9090'  // Replace with your ROS bridge server address
-});
-
 // Map visualization functions
 function createCanvas(mapName) {
   const mapContainer = document.getElementById('map-container');
@@ -52,43 +46,7 @@ function clearCanvas(mapName) {
   }
 }
 
-// ROS map subscription (adjust topic name and message type if needed)
-var mapview = new ROSLIB.Topic({
-  ros: ros,
-  name: '/map', // Subscribe to all map topics (replace with specific topic if needed)
-  messageType: 'nav_msgs/OccupancyGrid'  // Adjust based on your map message type
-});
 
-var pathSubscriber = new ROSLIB.Topic({
-    ros : ros,
-    name : '/plan',
-    messageType : 'nav_msgs/Path'
-});
-
-var robot_poseSubscriber = new ROSLIB.Topic({
-  ros: ros,
-  name: '/robot_pose',
-  messageType: 'geometry_msgs/PoseStamped'
-});
-
-var scan_pose_Subscriber = new ROSLIB.Topic({
-  ros: ros,
-  name: '/scan_pose',
-  messageType: 'geometry_msgs/PoseStamped'
-});
-
-// Create a ROSLIB.Topic object for publishing
-var goalPosePublisher = new ROSLIB.Topic({
-    ros: ros,
-    name: '/goal_pose',
-    messageType: 'geometry_msgs/PoseStamped'
-});
-
-var scanSubscriber = new ROSLIB.Topic({
-  ros: ros,
-  name: '/scan',
-  messageType: 'sensor_msgs/msg/LaserScan'
-});
 
 scan_pose_Subscriber.subscribe(function(msg) {
   scan_pose = msg.pose;
@@ -331,12 +289,6 @@ function send_nav2_goal_Message(pos, delta){
 	const currentTimeSecs = Math.floor(currentTime.getTime() / 1000);
 	const currentTimeNsecs = (currentTime.getTime() % 1000) * 1e6;
 
-	const publisher = new ROSLIB.Topic({
-		ros: ros,
-    name: '/goal_pose',
-    messageType: 'geometry_msgs/PoseStamped'
-	});
-
 	const poseMessage = new ROSLIB.Message({
 		header: {
 			stamp: {
@@ -359,7 +311,7 @@ function send_nav2_goal_Message(pos, delta){
 			}
 		}
 	});	
-	publisher.publish(poseMessage);
+	goalPosePublisher.publish(poseMessage);
 	// status.setOK();
 }
 
@@ -437,12 +389,3 @@ function applyRotation(vector, r, inverse){
 		z: v[2]
 	}
 }
-
-// ROS connection events
-ros.on('connected', function() {
-  console.log('Connected to ROS server');
-});
-
-ros.on('error', function(error) {
-  console.error('Error connecting to ROS server:', error);
-});
