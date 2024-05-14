@@ -20,7 +20,7 @@ export var mapview = new ROSLIB.Topic({
     name: '/map', // Subscribe to all map topics (replace with specific topic if needed)
     messageType: 'nav_msgs/OccupancyGrid'  // Adjust based on your map message type
   });
-  
+
 export var pathSubscriber = new ROSLIB.Topic({
     ros : ros,
     name : '/plan',
@@ -58,6 +58,7 @@ export var goalPosePublisher = new ROSLIB.Topic({
     messageType: 'geometry_msgs/PoseStamped'
 });
 
+
 export function sendVelocities(linearVel, angularVel) {
     // Publish Twist message with calculated velocities
     const twist = new ROSLIB.Message({
@@ -68,3 +69,38 @@ export function sendVelocities(linearVel, angularVel) {
     cmdVelPublisher.publish(twist);
 }
 
+
+export function mapToImageCoordinates(robot_x, robot_y, mapData, scaleX, scaleY) {
+    // Extract map information
+    const map_resolution = mapData.info.resolution;
+    const map_origin_x = mapData.info.origin.position.x;
+    const map_origin_y = mapData.info.origin.position.y;
+    const image_width = mapData.info.width;
+    const image_height = mapData.info.height;
+  
+    // Convert robot's map coordinates to image coordinates
+    const pixel_x = Math.floor((robot_x - map_origin_x) / map_resolution);
+    const pixel_y = Math.floor(image_height - (robot_y - map_origin_y) / map_resolution);  // Invert y-axis
+  
+    // return { x: pixel_x, y: pixel_y };
+    return { x: pixel_x * scaleX, y: pixel_y * scaleY };
+  }
+  
+export function imageToMapCoordinates(pixel_x, pixel_y, mapData) {
+    // Extract map information
+    const map_resolution = mapData.info.resolution;
+    const map_origin_x = mapData.info.origin.position.x;
+    const map_origin_y = mapData.info.origin.position.y;
+    const image_width = mapData.info.width;
+    const image_height = mapData.info.height;
+  
+    // Invert y-axis
+    pixel_y = image_height - pixel_y;
+  
+    // Convert image coordinates to robot's map coordinates with scaling factors
+    const robot_x = pixel_x * map_resolution + map_origin_x;
+    const robot_y = pixel_y * map_resolution + map_origin_y;
+  
+    return { x: robot_x, y: robot_y };
+  }
+  

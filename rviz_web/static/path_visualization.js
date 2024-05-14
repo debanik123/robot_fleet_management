@@ -1,5 +1,8 @@
 
-import { mapview, pathSubscriber, robot_poseSubscriber, scan_pose_Subscriber, scanSubscriber, goalPosePublisher } from './robo_utilities.js';
+import { mapview, pathSubscriber, 
+  robot_poseSubscriber, scan_pose_Subscriber, 
+  scanSubscriber, goalPosePublisher, 
+  mapToImageCoordinates, imageToMapCoordinates} from './robo_utilities.js';
 
 var maps = {}; // Dictionary to store maps and their canvas elements
 var canvas, ctx, scaleX, scaleY, startX, startY, mouseUpPose, mouseDownPose;
@@ -130,7 +133,7 @@ function scan_viz(msg) {
           z: rotated_scan_vec.z + scan_pose.position.z
         };
         
-        const image_robot_scan = mapToImageCoordinates(translated_scan_vec.x, translated_scan_vec.y);
+        const image_robot_scan = mapToImageCoordinates(translated_scan_vec.x, translated_scan_vec.y, mapData, scaleX, scaleY);
         drawFilledCircle(image_robot_scan.x, image_robot_scan.y, 1 , "red");
       }
     }
@@ -158,7 +161,7 @@ function visualizeMap(map_msg) {
   {
     // var px = robot_pose.position.x;
     // var py = robot_pose.position.y;
-    const image_robot_pose = mapToImageCoordinates(robot_pose.position.x, robot_pose.position.y);
+    const image_robot_pose = mapToImageCoordinates(robot_pose.position.x, robot_pose.position.y, mapData, scaleX, scaleY);
     // console.log('image_robot_pose:', image_robot_pose);
     drawFilledCircle(image_robot_pose.x, image_robot_pose.y, 10, "red");
   }
@@ -208,8 +211,8 @@ function visualizePath(poses) {
         const pose1 = poses[i].pose.position;
         const pose2 = poses[i + 1].pose.position;
 
-        const imageCoords1 = mapToImageCoordinates(pose1.x, pose1.y);
-        const imageCoords2 = mapToImageCoordinates(pose2.x, pose2.y);
+        const imageCoords1 = mapToImageCoordinates(pose1.x, pose1.y, mapData, scaleX, scaleY);
+        const imageCoords2 = mapToImageCoordinates(pose2.x, pose2.y, mapData, scaleX, scaleY);
 
         ctx.beginPath();
         ctx.moveTo(imageCoords1.x, imageCoords1.y);
@@ -282,7 +285,7 @@ function send_nav2_goal_Message(pos, delta){
 	let yaw = Math.atan2(delta.y, -delta.x);
 	let quat = new Quaternion.fromEuler(yaw, 0, 0, 'ZXY');
 
-  var map_pos = imageToMapCoordinates(pos.x / scaleX, pos.y / scaleY);
+  var map_pos = imageToMapCoordinates(pos.x / scaleX, pos.y / scaleY, mapData);
 	// let map_pos = view.screenToFixed(pos);
 
 	const currentTime = new Date();
@@ -315,39 +318,6 @@ function send_nav2_goal_Message(pos, delta){
 	// status.setOK();
 }
 
-function mapToImageCoordinates(robot_x, robot_y) {
-  // Extract map information
-  const map_resolution = mapData.info.resolution;
-  const map_origin_x = mapData.info.origin.position.x;
-  const map_origin_y = mapData.info.origin.position.y;
-  const image_width = mapData.info.width;
-  const image_height = mapData.info.height;
-
-  // Convert robot's map coordinates to image coordinates
-  const pixel_x = Math.floor((robot_x - map_origin_x) / map_resolution);
-  const pixel_y = Math.floor(image_height - (robot_y - map_origin_y) / map_resolution);  // Invert y-axis
-
-  // return { x: pixel_x, y: pixel_y };
-  return { x: pixel_x * scaleX, y: pixel_y * scaleY };
-}
-
-function imageToMapCoordinates(pixel_x, pixel_y) {
-  // Extract map information
-  const map_resolution = mapData.info.resolution;
-  const map_origin_x = mapData.info.origin.position.x;
-  const map_origin_y = mapData.info.origin.position.y;
-  const image_width = mapData.info.width;
-  const image_height = mapData.info.height;
-
-  // Invert y-axis
-  pixel_y = image_height - pixel_y;
-
-  // Convert image coordinates to robot's map coordinates with scaling factors
-  const robot_x = pixel_x * map_resolution + map_origin_x;
-  const robot_y = pixel_y * map_resolution + map_origin_y;
-
-  return { x: robot_x, y: robot_y };
-}
 
 
 
