@@ -62,16 +62,17 @@ function loadMap(map_msg) {
     cellWidth_ = cellWidth;
     cellHeight_ = cellHeight;
     // visualizePath(path_g, map_msg, cellWidth, cellHeight);
+    // console.log(cellWidth, cellHeight);
 }
 
-robot_poseSubscriber.subscribe(function(message) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    robot_pose = message.pose;
-    const image_robot_pose = mapToImageCoordinates(robot_pose.position.x, robot_pose.position.y, map_msg_, cellWidth_, cellHeight_);
-    // console.log('image_robot_pose:', image_robot_pose);
-    drawFilledCircle(ctx, image_robot_pose.x, image_robot_pose.y, 10, "red");
-    
-  });
+// robot_poseSubscriber.subscribe(function(message) {
+//     // ctx.clearRect(0, 0, canvas.width, canvas.height);
+//     robot_pose = message.pose;
+//     const image_robot_pose = mapToImageCoordinates(robot_pose.position.x, robot_pose.position.y, map_msg_, cellWidth_, cellHeight_);
+//     // console.log('image_robot_pose:', image_robot_pose);
+//     drawFilledCircle(ctx, image_robot_pose.x, image_robot_pose.y, 10, "red");
+
+//   });
 
 
 
