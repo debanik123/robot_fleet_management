@@ -25,7 +25,7 @@ class Ros2_node(Node):
         try:
             msg = Bool()
             msg.data = True
-            self.timer_publisher.publish(msg.data)
+            self.timer_publisher.publish(msg)
             
             robot_pose = self.tf_buffer.lookup_transform('map', 'base_footprint', rclpy.time.Time().to_msg())
             robot_pose_msg = self.transform_to_pose_stamped(robot_pose)
