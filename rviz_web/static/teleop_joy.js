@@ -1,5 +1,8 @@
 // Connect to ROS2
 import './lib/nipplejs.js';
+// import './robo_utilities.js';
+import { sendVelocities } from './robo_utilities.js';
+
 export const nipplejs = window.nipplejs;
 let joy_offset_x = "50%";
 let joy_offset_y = "85%";
@@ -17,39 +20,6 @@ let currentAngularVel = 0;
 
 var joy_start_point = undefined;
 var joy_delta = undefined;
-
-const ros = new ROSLIB.Ros({
-    url: 'ws://localhost:9090'  // Adjust the URL based on your ROS2 WebSocket server configuration
-});
-
-ros.on('connection', function () {
-    console.log('Connected to ROS2');
-});
-
-ros.on('error', function (error) {
-    console.error('Error connecting to ROS2:', error);
-});
-
-ros.on('close', function () {
-    console.log('Disconnected from ROS2');
-});
-
-// Define the cmd_vel publisher
-const cmdVelPublisher = new ROSLIB.Topic({
-    ros: ros,
-    name: '/cmd_vel',  // Adjust the topic name based on your robot's configuration
-    messageType: 'geometry_msgs/Twist'
-});
-
-function sendVelocities(linearVel, angularVel) {
-    // Publish Twist message with calculated velocities
-    const twist = new ROSLIB.Message({
-        linear: { x: linearVel, y: 0, z: 0 },
-        angular: { x: 0, y: 0, z: angularVel }
-    });
-
-    cmdVelPublisher.publish(twist);
-}
 
 const joystickContainer = document.getElementById('joystick');
 function makeJoystick(){
