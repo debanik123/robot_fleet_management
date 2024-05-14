@@ -5,6 +5,7 @@ import { mapview, pathSubscriber,
   mapToImageCoordinates, imageToMapCoordinates} from './robo_utilities.js';
 
 import {scan_viz} from './scan.js';
+import './goal_publish.js';
 
 var maps = {}; // Dictionary to store maps and their canvas elements
 var canvas, ctx, scaleX, scaleY, startX, startY, mouseUpPose, mouseDownPose;
@@ -182,51 +183,6 @@ function visualizePath(poses) {
         ctx.stroke();
     }
     
-}
-
-
-
-var mapContainer = document.getElementById('map-container');
-mapContainer.addEventListener('mousedown', onMousedown);
-function onMousedown(event)
-{
-  var rect = mapContainer.getBoundingClientRect();
-  const { clientX, clientY } = event.touches ? event.touches[0] : event;
-	start_point = {
-		x: clientX- rect.left,
-		y: clientY - rect.top
-	};
-
-  isDragging = true;
-  console.log('mousedown');
-  init_start_point = null;
-  init_delta = null;
-}
-
-mapContainer.addEventListener('mousemove', onMousemove) ;
-function onMousemove(event)
-{
-  if (start_point === undefined) return;
-
-	const { clientX, clientY } = event.touches ? event.touches[0] : event;
-	delta = {
-		x: start_point.x - clientX,
-		y: start_point.y - clientY,
-	};
-  // drawArrow();
-
-}
-
-mapContainer.addEventListener('mouseup', onMouseup);
-function onMouseup(event)
-{
-  console.log('mouseup');
-  send_nav2_goal_Message(start_point, delta);
-  drawArrow();
-  init_start_point = start_point;
-  init_delta = delta;
-  start_point = undefined;
-	delta = undefined;
 }
 
 
