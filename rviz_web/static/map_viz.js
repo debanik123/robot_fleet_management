@@ -14,7 +14,7 @@ const mapContainer = document.getElementById('map-container');
 
 // Create a canvas element and set its attributes
 const canvas = document.createElement('canvas');
-canvas.id = 'map-canvas-/map1';
+canvas.id = 'map-canvas-map1';
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 mapContainer.appendChild(canvas);
