@@ -19,6 +19,7 @@ const cmdVelPublisher = new ROSLIB.Topic({
     ros: ros,
     name: '/cmd_vel',  // Adjust the topic name based on your robot's configuration
     messageType: 'geometry_msgs/Twist'
+    // needs to modify
 });
 
 export function sendVelocities(linearVel, angularVel) {
