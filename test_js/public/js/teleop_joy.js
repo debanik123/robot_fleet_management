@@ -83,7 +83,7 @@ function onJoystickMove(event, data) {
         currentAngularVel = Math.max(currentAngularVel - decelerationRate, targetAngularVel);
     }
 
-    console.log('targetLinearVel:', targetLinearVel, 'targetAngularVel: ', targetAngularVel);
+    // console.log('targetLinearVel:', targetLinearVel, 'targetAngularVel: ', targetAngularVel);
 
 	// console.log('Current linear velocity:', currentLinearVel);
     // console.log('Current angular velocity:', currentAngularVel);
@@ -102,7 +102,7 @@ function onJoystickEnd(event) {
 	currentLinearVel = 0;
     currentAngularVel = 0;
 
-	console.log('targetLinearVel:', targetLinearVel, 'targetAngularVel: ', targetAngularVel);
+	// console.log('targetLinearVel:', targetLinearVel, 'targetAngularVel: ', targetAngularVel);
 
     // Print velocities when joystick ends
     // console.log('Joystick ended');
