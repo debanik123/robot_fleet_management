@@ -42,32 +42,34 @@ To get started with the Robot Fleet Management System, follow these steps:
 
 # Getting started with rclnode js 
 
-sudo apt purge nodejs
-sudo apt autoremove
+```bash
+      sudo apt purge nodejs
+      sudo apt autoremove
 
-sudo apt update
-sudo apt upgrade
-sudo apt install -y curl
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt install -y nodejs
-node --version
+      sudo apt update
+      sudo apt upgrade
+      sudo apt install -y curl
+      curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+      sudo apt install -y nodejs
+      node --version
 
-git clone https://github.com/RobotWebTools/rclnodejs.git
-cd rclnodejs
-npx rclnodejs-cli -h
-npx rclnodejs-cli generate-ros-messages
-npx rclnodejs-cli create-package -h
+      git clone https://github.com/RobotWebTools/rclnodejs.git
+      cd rclnodejs
+      npx rclnodejs-cli -h
+      npx rclnodejs-cli generate-ros-messages
+      npx rclnodejs-cli create-package -h
 
-sudo apt-get install ros-humble-ament-*
-sudo apt install ros-humble-test-msgs 
-sudo apt install ros-humble-example-interfaces
+      sudo apt-get install ros-humble-ament-*
+      sudo apt install ros-humble-test-msgs 
+      sudo apt install ros-humble-example-interfaces
 
-example -->
-npx rclnodejs-cli create-package mypkg --typescript
-cd mypkg
-npm run build
-cd dist
-node index.js
+      example -->
+      npx rclnodejs-cli create-package mypkg --typescript
+      cd mypkg
+      npm run build
+      cd dist
+      node index.js
+
 
 # run 
 npm start
