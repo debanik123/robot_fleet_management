@@ -77,7 +77,7 @@ function onJoystickMove(event, data) {
 	// console.log('Current linear velocity:', currentLinearVel);
     // console.log('Current angular velocity:', currentAngularVel);
 	// sendVelocities(currentLinearVel, currentAngularVel);
-	publishVelocity(currentLinearVel, 0.0, currentAngularVel);
+	// publishVelocity(currentLinearVel, 0.0, currentAngularVel);
 
 
     // console.log('Joystick force:', data.force);
@@ -95,7 +95,7 @@ function onJoystickEnd(event) {
     // console.log('Current linear velocity:', currentLinearVel);
     // console.log('Current angular velocity:', currentAngularVel);
 	// sendVelocities(currentLinearVel, currentAngularVel);
-	publishVelocity(currentLinearVel, 0.0, currentAngularVel);
+	// publishVelocity(currentLinearVel, 0.0, currentAngularVel);
 
 }
 
