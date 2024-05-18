@@ -1,11 +1,6 @@
 // Connect to ROS2
+// 'use strict';
 import './lib/nipplejs.js';
-// import './robo_utilities.js';
-// import { sendVelocities } from './cmd_vel_publisher.js';
-// import { sendVelocities } from './src/robo_utilities.js';
-// const { createCmdVelPublisher } = require('./cmd_vel_publisher'); // Import the function
-// const publishVelocity = createCmdVelPublisher('robot_velocity_publisher', '/cmd_vel'); // Create publisher
- // Publish velocity (1 m/s forward, 0.5 rad/s rotation)
 
 export const nipplejs = window.nipplejs;
 let joy_offset_x = "50%";
@@ -24,6 +19,22 @@ let currentAngularVel = 0;
 
 var joy_start_point = undefined;
 var joy_delta = undefined;
+
+function sendVelocities(linearX, linearY, angularZ) {
+	fetch('/cmd_vel', {
+	  method: 'POST',
+	  headers: {
+		'Content-Type': 'application/json',
+	  },
+	  body: JSON.stringify({ linearX, linearY, angularZ }),
+	}).then(response => {
+	  if (!response.ok) {
+		console.error('Failed to send velocities:', response.statusText);
+	  }
+	}).catch(error => {
+	  console.error('Error:', error);
+	});
+  }
 
 const joystickContainer = document.getElementById('joystick');
 function makeJoystick(){
@@ -78,6 +89,7 @@ function onJoystickMove(event, data) {
     // console.log('Current angular velocity:', currentAngularVel);
 	// sendVelocities(currentLinearVel, currentAngularVel);
 	// publishVelocity(currentLinearVel, 0.0, currentAngularVel);
+	sendVelocities(currentLinearVel, 0.0, currentAngularVel);
 
 
     // console.log('Joystick force:', data.force);
@@ -98,6 +110,7 @@ function onJoystickEnd(event) {
     // console.log('Current angular velocity:', currentAngularVel);
 	// sendVelocities(currentLinearVel, currentAngularVel);
 	// publishVelocity(currentLinearVel, 0.0, currentAngularVel);
+	sendVelocities(currentLinearVel, 0.0, currentAngularVel);
 
 }
 

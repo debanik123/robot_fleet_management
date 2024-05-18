@@ -68,6 +68,9 @@ cd mypkg
 npm run build
 cd dist
 node index.js
+
+# kill all node
+pkill -f node
 <!-- colcon build -->
 
 <!-- run -->

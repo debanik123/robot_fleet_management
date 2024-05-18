@@ -1,22 +1,33 @@
-const { createNode, ROS_DOMAIN_ID } = require('rclnodejs');
-const { Twist } = require('geometry_msgs/msg/twist'); // Import Twist message
+const rclnodejs = require('rclnodejs');
 
-function createCmdVelPublisher(nodeName, topicName) {
-  const node = createNode(nodeName, ROS_DOMAIN_ID);
+let publisher;
 
-  const publisher = node.createPublisher(Twist, topicName);
-
-  // Function to publish a Twist message
-  function publishVelocity(linearX, linearY, angularZ) {
-    const twistMsg = new Twist();
-    twistMsg.linear.x = linearX;
-    twistMsg.linear.y = linearY;
-    twistMsg.angular.z = angularZ;
-
-    publisher.publish(twistMsg);
-  }
-
-  return publishVelocity; // Return the publishVelocity function
+function initializePublisher() {
+  rclnodejs.init().then(() => {
+    const node = new rclnodejs.Node('robot_velocity_publisher');
+    publisher = node.createPublisher('geometry_msgs/msg/Twist', '/cmd_vel');
+    rclnodejs.spin(node);
+    console.log('Publisher initialized');
+  }).catch((err) => {
+    console.error('Error initializing rclnodejs:', err);
+  });
 }
 
-module.exports = createCmdVelPublisher;
+function publishVelocity(linearX, linearY, angularZ) {
+  if (!publisher) {
+    console.error('Publisher is not initialized');
+    return;
+  }
+
+  const msg = rclnodejs.createMessageObject('geometry_msgs/msg/Twist');
+  msg.linear.x = linearX;
+  msg.linear.y = linearY;
+  msg.linear.z = 0.0;
+  msg.angular.x = 0.0;
+  msg.angular.y = 0.0;
+  msg.angular.z = angularZ;
+
+  publisher.publish(msg);
+}
+
+module.exports = { initializePublisher, publishVelocity };
