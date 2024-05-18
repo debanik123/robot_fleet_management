@@ -9,5 +9,5 @@
     }
   },
   "exclude": ["node_modules", "**/node_modules/*"],
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "public/js/lib", "public/js/teleop_joy.js", "static/robo_utilities.js", "public/js/cmd_vel_publisher.js"]
 }

@@ -12,6 +12,7 @@
     "generate-ros-messages": "node_modules/.bin/generate-ros-messages"
   },
   "dependencies": {
+    "express": "^4.19.2",
     "rclnodejs": "^0.26.1"
   }
 }
