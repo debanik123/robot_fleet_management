@@ -42,7 +42,7 @@ To get started with the Robot Fleet Management System, follow these steps:
 
 # Getting started with rclnode js 
 
-```bash
+      ```
       sudo apt purge nodejs
       sudo apt autoremove
 
@@ -70,11 +70,11 @@ To get started with the Robot Fleet Management System, follow these steps:
       cd dist
       node index.js
 
-
+      ```
 # run 
-npm start
+``` npm start ```
 # kill all node
-pkill -f node
+``` pkill -f node ```
 <!-- colcon build -->
 
 <!-- run -->
