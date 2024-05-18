@@ -75,6 +75,7 @@ To get started with the Robot Fleet Management System, follow these steps:
 ``` npm start ```
 # kill all node
 ``` pkill -f node ```
+# vs code preview mode -> ctrl+shift+v
 <!-- colcon build -->
 
 <!-- run -->
