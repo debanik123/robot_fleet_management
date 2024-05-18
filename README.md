@@ -78,6 +78,11 @@ To get started with the Robot Fleet Management System, follow these steps:
 # vs code preview mode -> ctrl+shift+v
 <!-- colcon build -->
 
+# server host using https-server
+sudo npm install -g http-server
+http-server -c-1
+
+
 <!-- run -->
 <!-- source install/setup.bash
 ros2 launch mypkg example.launch.py -->
