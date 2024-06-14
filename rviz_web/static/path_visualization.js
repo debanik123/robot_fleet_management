@@ -389,7 +389,7 @@ function imageToMapCoordinates(pixel_x, pixel_y) {
 
   // Invert y-axis
   // pixel_y = image_height - pixel_y;
-  pixel_y = pixel_y;
+  // pixel_y = pixel_y;
 
   // Convert image coordinates to robot's map coordinates with scaling factors
   const robot_x = pixel_x * map_resolution + map_origin_x;
