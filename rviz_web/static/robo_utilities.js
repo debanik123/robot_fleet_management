@@ -1,5 +1,5 @@
 const ros = new ROSLIB.Ros({
-    url: 'ws://localhost:9090'  // Adjust the URL based on your ROS2 WebSocket server configuration
+    url: 'ws://192.168.0.25:9090'  // Adjust the URL based on your ROS2 WebSocket server configuration
 });
 
 ros.on('connection', function () {
