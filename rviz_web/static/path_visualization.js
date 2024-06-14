@@ -134,8 +134,8 @@ mapview.subscribe(function(map_msg) {
     ctx = maps[mapName].ctx;
 
     // Update canvas dimensions based on map data
-    canvas.width = 480;
-    canvas.height = 480;
+    canvas.width = 600;
+    canvas.height = 600;
 
     // Clear previous map visualization (optional)
     // clearCanvas(mapName);
@@ -311,7 +311,7 @@ function static_drawArrow(point, delta)
   ctx.translate(point.x, point.y);
   ctx.scale(1.0, 1.0);
   ctx.rotate(Math.atan2(-delta.y, -delta.x));
-  ctx.drawImage(sprite, -80, -80*ratio, 160, 160*ratio);
+  ctx.drawImage(sprite, -50, -50*ratio, 100, 100*ratio);
   ctx.restore();
 }
 
@@ -409,7 +409,7 @@ function drawArrow() {
     ctx.translate(start_point.x, start_point.y);
     ctx.scale(1.0, 1.0);
     ctx.rotate(Math.atan2(-delta.y, -delta.x));
-    ctx.drawImage(sprite, -80, -80*ratio, 160, 160*ratio);
+    ctx.drawImage(sprite, -50, -50*ratio, 100, 100*ratio);
     ctx.restore();
   }
 }
