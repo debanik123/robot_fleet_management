@@ -62,4 +62,6 @@ def index():
 if __name__ == '__main__':
     thread = Thread(target=publish_topic_data)
     thread.start()
-    app.run(host='0.0.0.0', port=5000,debug=True)
+    ssl_cert = 'config/cert.pem'
+    ssl_key = 'config/key.pem'
+    app.run(host='0.0.0.0',port=5000, ssl_context=(ssl_cert, ssl_key), debug=True)
