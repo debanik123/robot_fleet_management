@@ -64,4 +64,5 @@ if __name__ == '__main__':
     thread.start()
     ssl_cert = 'config/cert.pem'
     ssl_key = 'config/key.pem'
-    app.run(host='0.0.0.0',port=5000, ssl_context=(ssl_cert, ssl_key), debug=True)
+    # app.run(host='0.0.0.0',port=5000, ssl_context=(ssl_cert, ssl_key), debug=True)
+    app.run(host='0.0.0.0',port=5000, debug=True)

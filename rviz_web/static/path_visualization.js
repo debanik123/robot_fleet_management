@@ -29,7 +29,7 @@ sprite.src = "static/icons/simplegoal.png";
 // ros2 launch nav2_bringup tb3_simulation_launch.py slam:=True
 // ROS connection setup (assuming ROSLIB is already included)
 var ros = new ROSLIB.Ros({
-  url: 'wss://192.168.0.25:9090'  // Replace with your ROS bridge server address
+  url: 'ws://192.168.35.93:9090'  // Replace with your ROS bridge server address
 });
 
 // Map visualization functions
