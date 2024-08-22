@@ -31,7 +31,7 @@ let sprite = new Image();
 sprite.src = "static/icons/simplegoal.png";
 
 const robotIcon = new Image();
-robotIcon.src = 'static/icons/robot.png';
+robotIcon.src = 'static/icons/robot_small.png';
 // const Quaternion = require('quaternion');
 // let tf = tfModule.tf;
 
@@ -133,7 +133,7 @@ function visualizeMap(map_msg) {
     const yaw = quaternionToEulerYaw(robot_pose.orientation);
     console.log('image_robot_pose yaw:', yaw);
     // drawFilledCircle(ctx, image_robot_pose.x, image_robot_pose.y, 10, "red");
-    drawRobotIcon(ctx, image_robot_pose.x, image_robot_pose.y, 30, yaw);
+    drawRobotIcon(ctx, image_robot_pose.x, image_robot_pose.y, 20, yaw);
   }
 
   drawArrow();
@@ -309,7 +309,7 @@ function drawArrow() {
 function drawRobotIcon(ctx, x, y, size, rotation) {
   ctx.save();
   ctx.translate(x, y);
-  ctx.rotate(Math.PI/2-rotation);
+  ctx.rotate(Math.PI-rotation);
   ctx.drawImage(robotIcon, -size / 2, -size / 2, size, size);
   ctx.restore();
 }
