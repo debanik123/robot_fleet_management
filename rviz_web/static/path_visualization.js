@@ -22,12 +22,16 @@ var init_delta = null;
 var scan_pose = null;
 
 let active = false;
-let sprite = new Image();
+
 let start_point = undefined;
 let delta = undefined;
 let scan_msg = undefined;
 
+let sprite = new Image();
 sprite.src = "static/icons/simplegoal.png";
+
+const robotIcon = new Image();
+robotIcon.src = 'static/icons/robot.png';
 // const Quaternion = require('quaternion');
 // let tf = tfModule.tf;
 
@@ -125,8 +129,11 @@ function visualizeMap(map_msg) {
     // var px = robot_pose.position.x;
     // var py = robot_pose.position.y;
     const image_robot_pose = mapToImageCoordinates(robot_pose.position.x, robot_pose.position.y, mapData, scaleX, scaleY);
-    // console.log('image_robot_pose:', image_robot_pose);
-    drawFilledCircle(ctx, image_robot_pose.x, image_robot_pose.y, 10, "red");
+
+    const yaw = quaternionToEulerYaw(robot_pose.orientation);
+    console.log('image_robot_pose yaw:', yaw);
+    // drawFilledCircle(ctx, image_robot_pose.x, image_robot_pose.y, 10, "red");
+    drawRobotIcon(ctx, image_robot_pose.x, image_robot_pose.y, 30, yaw);
   }
 
   drawArrow();
@@ -299,6 +306,26 @@ function drawArrow() {
   }
 }
 
+function drawRobotIcon(ctx, x, y, size, rotation) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(Math.PI/2-rotation);
+  ctx.drawImage(robotIcon, -size / 2, -size / 2, size, size);
+  ctx.restore();
+}
+
+function quaternionToEulerYaw(orientation) {
+  const { w, x, y, z } = orientation;
+
+  // Compute siny_cosp and cosy_cosp
+  const siny_cosp = 2 * (w * z + x * y);
+  const cosy_cosp = 1 - 2 * (y * y + z * z);
+
+  // Calculate yaw angle in radians
+  const yaw = Math.atan2(siny_cosp, cosy_cosp);
+
+  return yaw;
+}
 
 
 
