@@ -130,10 +130,10 @@ function visualizeMap(map_msg) {
   }
 
   drawArrow();
-  if (init_start_point !== null && init_delta !== null)
-  {
-    static_drawArrow(ctx, init_start_point, init_delta);
-  }
+  // if (init_start_point !== null && init_delta !== null)
+  // {
+  //   static_drawArrow(ctx, init_start_point, init_delta);
+  // }
 
   if (typeof scan_msg !== 'undefined') {
     scan_viz(scan_msg, scan_pose, mapData, scaleX, scaleY, ctx);
@@ -222,7 +222,7 @@ function onMouseup(event)
 {
   console.log('mouseup');
   send_nav2_goal_Message(start_point, delta);
-  drawArrow();
+  // drawArrow();
   init_start_point = start_point;
   init_delta = delta;
   start_point = undefined;
@@ -294,7 +294,7 @@ function drawArrow() {
     ctx.translate(start_point.x, start_point.y);
     ctx.scale(1.0, 1.0);
     ctx.rotate(Math.atan2(-delta.y, -delta.x));
-    ctx.drawImage(sprite, -80, -80*ratio, 160, 160*ratio);
+    ctx.drawImage(sprite, -40, -40*ratio, 80, 80*ratio);
     ctx.restore();
   }
 }
