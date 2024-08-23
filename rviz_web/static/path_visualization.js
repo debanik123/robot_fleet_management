@@ -60,12 +60,29 @@ function clearCanvas(mapName) {
 scan_pose_Subscriber.subscribe(function(msg) {
   scan_pose = msg.pose;
   // console.log(scan_pose);
-  if (mapData !== null) 
-  {
-    visualizeMap(mapData);
-  }
+  // if (mapData !== null) 
+  // {
+  //   visualizeMap(mapData);
+  // }
 
 });
+
+async function runVisualizationLoop() {
+  while (true) {
+    // Assuming mapData is a global or passed variable that could change
+    if (mapData !== null) {
+      visualizeMap(mapData);
+    }
+    
+    // Delay before checking again (e.g., 1 second)
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+}
+
+// Call the async function to start the loop
+runVisualizationLoop();
+
+
 
 scanSubscriber.subscribe(function(msg) {
   scan_msg = msg;
@@ -117,8 +134,9 @@ function visualizeMap(map_msg) {
           var color = getColorForOccupancy(value);
           ctx.fillStyle = color;
           // ctx.fillRect(x, y, 1, 1);
+          var flippedy = map_msg.info.height - 1 - y;
           var flippedX = map_msg.info.width - 1 - x;
-          ctx.fillRect(flippedX * scaleX, y * scaleY, scaleX, scaleY);
+          ctx.fillRect(x * scaleX, y * scaleY, scaleX, scaleY);
       }
   }
 
@@ -316,7 +334,7 @@ function drawArrow() {
 function drawRobotIcon(ctx, x, y, size, rotation) {
   ctx.save();
   ctx.translate(x, y);
-  ctx.rotate(3*Math.PI/2-rotation);
+  ctx.rotate(Math.PI/2-rotation);
   ctx.drawImage(robotIcon, -size / 2, -size / 2, size, size);
   ctx.restore();
 }

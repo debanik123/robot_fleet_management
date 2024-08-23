@@ -81,8 +81,8 @@ export function mapToImageCoordinates(robot_x, robot_y, mapData, scaleX, scaleY)
     // console.log(map_resolution);
   
     // Convert robot's map coordinates to image coordinates
-    const pixel_x = Math.floor(((-robot_x - map_origin_x)) / map_resolution);
-    const pixel_y = Math.floor((robot_y - map_origin_y) / map_resolution);  // Invert y-axis
+    const pixel_x = Math.floor(((robot_x - map_origin_x)) / map_resolution);
+    const pixel_y = Math.floor(image_height - (robot_y - map_origin_y) / map_resolution);  // Invert y-axis
   
     // return { x: pixel_x, y: pixel_y };
     return { x: pixel_x * scaleX, y: pixel_y * scaleY };
