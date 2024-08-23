@@ -117,7 +117,8 @@ function visualizeMap(map_msg) {
           var color = getColorForOccupancy(value);
           ctx.fillStyle = color;
           // ctx.fillRect(x, y, 1, 1);
-          ctx.fillRect(x * scaleX, y * scaleY, scaleX, scaleY);
+          var flippedX = map_msg.info.width - 1 - x;
+          ctx.fillRect(flippedX * scaleX, y * scaleY, scaleX, scaleY);
       }
   }
 
