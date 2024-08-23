@@ -59,6 +59,7 @@ function clearCanvas(mapName) {
 
 scan_pose_Subscriber.subscribe(function(msg) {
   scan_pose = msg.pose;
+  // console.log(scan_pose);
   if (mapData !== null) 
   {
     visualizeMap(mapData);
@@ -131,7 +132,7 @@ function visualizeMap(map_msg) {
     const image_robot_pose = mapToImageCoordinates(robot_pose.position.x, robot_pose.position.y, mapData, scaleX, scaleY);
 
     const yaw = quaternionToEulerYaw(robot_pose.orientation);
-    console.log('image_robot_pose yaw:', yaw);
+    // console.log('image_robot_pose yaw:', yaw);
     // drawFilledCircle(ctx, image_robot_pose.x, image_robot_pose.y, 10, "red");
     drawRobotIcon(ctx, image_robot_pose.x, image_robot_pose.y, 30, yaw);
   }
@@ -142,16 +143,16 @@ function visualizeMap(map_msg) {
   //   static_drawArrow(ctx, init_start_point, init_delta);
   // }
 
-  if (typeof scan_msg !== 'undefined') {
-    scan_viz(scan_msg, scan_pose, mapData, scaleX, scaleY, ctx);
-  }
+  // if (typeof scan_msg !== 'undefined') {
+  //   scan_viz(scan_msg, scan_pose, mapData, scaleX, scaleY, ctx);
+  // }
 
   
 }
 
 function getColorForOccupancy(occupancyValue) {
   if (occupancyValue === 100) {
-      return 'gray'; // Occupied space
+      return '#003366'; // Occupied space
   } else if (occupancyValue === 0) {
       return 'white'; // Free space
   } else {
