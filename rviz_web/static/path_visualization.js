@@ -194,7 +194,10 @@ function visualizePath(poses) {
 
 
 var mapContainer = document.getElementById('map-container');
+
 mapContainer.addEventListener('mousedown', onMousedown);
+mapContainer.addEventListener('touchstart', onMousedown);
+
 function onMousedown(event)
 {
   var rect = mapContainer.getBoundingClientRect();
@@ -210,6 +213,7 @@ function onMousedown(event)
   init_delta = null;
 }
 
+mapContainer.addEventListener('touchmove', onMousemove) ;
 mapContainer.addEventListener('mousemove', onMousemove) ;
 function onMousemove(event)
 {
@@ -224,6 +228,7 @@ function onMousemove(event)
 
 }
 
+mapContainer.addEventListener('touchend', onMouseup);
 mapContainer.addEventListener('mouseup', onMouseup);
 function onMouseup(event)
 {
