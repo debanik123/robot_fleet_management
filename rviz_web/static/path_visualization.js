@@ -151,7 +151,7 @@ function visualizeMap(map_msg) {
 
 function getColorForOccupancy(occupancyValue) {
   if (occupancyValue === 100) {
-      return 'black'; // Occupied space
+      return 'gray'; // Occupied space
   } else if (occupancyValue === 0) {
       return 'white'; // Free space
   } else {

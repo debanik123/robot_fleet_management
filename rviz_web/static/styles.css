@@ -32,6 +32,15 @@
     left: 20px;
 }
 
+.occupied {
+    border: 1px solid gray; /* Thin gray border */
+  }
+  
+.free {
+    border: 1px solid white; /* Thin white border for free space */
+  }
+  
+
 
 /* #teleop_key {
     width: 200px;
