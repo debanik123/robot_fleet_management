@@ -315,7 +315,7 @@ function drawArrow() {
 function drawRobotIcon(ctx, x, y, size, rotation) {
   ctx.save();
   ctx.translate(x, y);
-  ctx.rotate(Math.PI/2-rotation);
+  ctx.rotate(3*Math.PI/2-rotation);
   ctx.drawImage(robotIcon, -size / 2, -size / 2, size, size);
   ctx.restore();
 }
