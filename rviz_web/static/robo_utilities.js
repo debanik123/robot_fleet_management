@@ -78,7 +78,7 @@ export function mapToImageCoordinates(robot_x, robot_y, mapData, scaleX, scaleY)
     const image_width = mapData.info.width;
     const image_height = mapData.info.height;
 
-    console.log(map_resolution);
+    // console.log(map_resolution);
   
     // Convert robot's map coordinates to image coordinates
     const pixel_x = Math.floor(((-robot_x - map_origin_x)) / map_resolution);
